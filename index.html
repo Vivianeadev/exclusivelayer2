@@ -4511,9 +4511,31 @@ scope:rpc
         communicationTab.appendChild(explanation);
       }
     }
+  <!-- Notificação -->
+  <div class="notification" id="notification">
+    <div id="notificationMessage">✅ Identidade Polygon conectada!</div>
+  </div>
 
+  <!-- ========== SISTEMA WEBRTC REAL ========== -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="./webrtc-real.js"></script>
+  <script>
+    // Quando a wallet conectar, inicializar WebRTC
+    window.addEventListener('wallet-connected', function() {
+      if (window.webrtcSystem && window.webrtcSystem.initialize) {
+        window.webrtcSystem.initialize();
+        console.log('🔗 WebRTC conectado');
+      }
+    });
+    
+    // Se já tiver wallet, conectar automaticamente
+    if (window.currentWallet && window.webrtcSystem) {
+      setTimeout(function() {
+        window.webrtcSystem.initialize();
+      }, 2000);
+    }
   </script>
-
+  <!-- ========== FIM WEBRTC ========== -->
   <!-- Linha divisória de luxo e instruções finais -->
   <div style="position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); width: 80%; max-width: 800px;">
     <div style="width: 100%; height: 1px; background: var(--gradient-gold); margin-bottom: 10px;"></div>
