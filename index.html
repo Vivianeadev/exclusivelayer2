@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusivelayer</title>
+    
+    <!-- TODO: TODO O SEU CSS ATUAL FICA AQUI (completo) -->
+    <style>
+        /* TODOS os estilos atuais do seu site */
+        /* Body, header, navbar, hero section, etc */
+        /* INCLUINDO os estilos do chat também! */
+        
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Arial', sans-serif; 
+            background: #000; 
+            color: #fff; 
+        }
+        
+        /* Estilos da página principal */
+        .header { /* ... */ }
+        .hero { /* ... */ }
+        .products { /* ... */ }
+        
+        /* Estilos do chat (mantidos aqui também) */
+        .chat-container { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            width: 350px; 
+            background: #111; 
+            border-radius: 10px; 
+            box-shadow: 0 0 20px rgba(0,255,0,0.3); 
+            display: none; /* ou flex, depende do seu design */
+        }
+        .chat-header { /* ... */ }
+        .chat-messages { /* ... */ }
+        .chat-input { /* ... */ }
+    </style>
+</head>
+<body>
+    <!-- TODO: TODO O CONTEÚDO ATUAL DA SUA PÁGINA -->
+    <header class="header">...</header>
+    <main class="hero">...</main>
+    <section class="products">...</section>
+    <!-- etc -->
+    
+    <!-- CHAT como IFRAME (mantém aparência idêntica) -->
+    <div class="chat-wrapper" style="position: fixed; bottom: 20px; right: 20px;">
+        <iframe 
+            src="chat.html" 
+            id="chat-frame"
+            style="
+                width: 350px;
+                height: 500px;
+                border: none;
+                border-radius: 10px;
+                display: none; /* controle visibilidade */
+            ">
+        </iframe>
+        
+        <!-- Botão para abrir/fechar chat -->
+        <button class="chat-toggle-btn" onclick="toggleChat()">
+            💬 Abrir Chat
+        </button>
+    </div>
+
+    <script>
+        // Função para controlar chat
+        function toggleChat() {
+            const frame = document.getElementById('chat-frame');
+            const btn = document.querySelector('.chat-toggle-btn');
+            
+            if (frame.style.display === 'none' || frame.style.display === '') {
+                frame.style.display = 'block';
+                btn.textContent = '❌ Fechar Chat';
+                // Focar no iframe quando abrir
+                frame.contentWindow.focus();
+            } else {
+                frame.style.display = 'none';
+                btn.textContent = '💬 Abrir Chat';
+            }
+        }
+        
+        // Comunicação entre páginas se necessário
+        window.addEventListener('message', function(event) {
+            if (event.data === 'closeChat') {
+                toggleChat();
+            }
+        });
+    </script>
+</body>
+</html>
