@@ -2482,7 +2482,36 @@ scope:rpc
 
     // [INSIRA AQUI TODAS AS OUTRAS FUNÇÕES DO SEU CÓDIGO ORIGINAL]
     // (as funções que não foram modificadas permanecem iguais)
+// ... [código WebRTC existente] ...
 
+// ======================================================
+// INICIALIZAÇÃO AUTOMÁTICA DO CALENDÁRIO
+// ======================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    // Quando mudar para a aba agenda, inicializar o calendário
+    const agendaTab = document.getElementById('agendaTab');
+    if (agendaTab) {
+      // Observar mudanças na aba
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'class' && agendaTab.classList.contains('active')) {
+            setTimeout(() => {
+              if (typeof agendaSystem.init === 'function') {
+                agendaSystem.init();
+              }
+            }, 300);
+          }
+        });
+      });
+      
+      observer.observe(agendaTab, { attributes: true });
+    }
+  }, 1000);
+});
+
+</script>  <!-- ESTA É A LINHA ONDE VOCÊ DEVE INSERIR O CÓDIGO ANTES -->
   </script>
 
   <!-- Linha divisória de luxo e instruções finais -->
