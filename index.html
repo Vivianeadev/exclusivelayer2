@@ -4507,7 +4507,15 @@ scope:rpc
     }
 
     // Resto das funções existentes permanecem inalteradas...
+// Sistema de carregamento dinâmico
+function loadBlockchain(chainId) {
+  // Implementação acima
+}
 
+// Carregar Polygon por padrão após login
+if (currentWallet) {
+  loadBlockchain('polygon');
+}
   </script>
 
   <!-- Linha divisória de luxo e instruções finais -->
