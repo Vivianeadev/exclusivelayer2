@@ -1,29 +1,2757 @@
-<!-- CÓDIGO COMPLETO FUNCIONAL - VERIFICAÇÃO FINAL -->
+<!-- WALLET WEB3 PREMIUM - VERSÃO FINAL CORRIGIDA -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- METADADOS ORIGINAIS -->
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Exclusive Wallet Premium — Sistema Blockchain Isolado</title>
   
-  <!-- BIBLIOTECAS ORIGINAIS -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   
-  <!-- FONTS ORIGINAIS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- CSS ORIGINAL 6300+ LINHAS - INTACTO -->
-  <link rel="stylesheet" href="./assets/css/style.css">
-	
+  <style>
+    /* CSS ORIGINAL INTACTO - COM CORREÇÕES DE RESPONSIVIDADE */
+    :root{
+      --gold-primary:#D4AF37;--gold-secondary:#F4E4B8;--gold-accent:#B8860B;
+      --gold-dark:#8B6914;--platinum:#E5E4E2;--carbon:#1A1A1A;
+      --obsidian:#0A0A0A;--emerald:#046307;--sapphire:#0F52BA;
+      --ruby:#E0115F;--diamond:#B9F2FF;
+      --transition:all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --shadow-luxury:0 25px 50px rgba(0, 0, 0, 0.1),0 15px 30px rgba(0, 0, 0, 0.08);
+      --shadow-gold:0 8px 32px rgba(212,175,55,0.25);
+      --gradient-gold:linear-gradient(135deg,#D4AF37 0%,#F4E4B8 50%,#B8860B 100%);
+      --gradient-dark:linear-gradient(135deg,#1A1A1A 0%,#0A0A0A 100%);
+      --gradient-card:linear-gradient(135deg,rgba(212,175,55,0.1) 0%,rgba(244,228,184,0.05) 100%);
+      --wet-mirror:linear-gradient(135deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.05) 25%,rgba(255,255,255,0.15) 50%,rgba(255,255,255,0.05) 75%,rgba(255,255,255,0.1) 100%);
+    }
+    
+    .theme-luxury{
+      --primary-color:#D4AF37;--secondary-color:#F4E4B8;--accent-color:#B8860B;
+      --background-primary:#0A0A0A;--background-secondary:#1A1A1A;
+      --text-primary:#F0F0F0;--text-secondary:#B0B0B0;
+      --container-bg:rgba(26,26,26,0.95);--container-border:rgba(212,175,55,0.3);
+      --card-bg:rgba(30,30,30,0.8);--card-border:rgba(212,175,55,0.2);
+      --success-color:#00C853;--warning-color:#FFD700;--error-color:#FF5252;
+    }
+    
+    .theme-light{
+      --primary-color:#D4AF37;--secondary-color:#F4E4B8;--accent-color:#B8860B;
+      --background-primary:#FFFFFF;--background-secondary:#F8F8F8;
+      --text-primary:#1A1A1A;--text-secondary:#555555;
+      --container-bg:rgba(255,255,255,0.95);--container-border:rgba(212,175,55,0.3);
+      --card-bg:rgba(255,255,255,0.9);--card-border:rgba(212,175,55,0.2);
+      --success-color:#00A859;--warning-color:#E6B400;--error-color:#E53935;
+    }
+    
+    *{
+      margin:0;padding:0;box-sizing:border-box;
+      font-family:'Inter','Helvetica Neue',Arial,sans-serif;
+    }
+    
+    body{
+      background:var(--background-primary);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+      color:var(--text-primary);
+      transition:var(--transition);
+      font-weight:300;
+      position:relative;
+      overflow-x:hidden;
+    }
+    
+    body::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:radial-gradient(circle at 20% 80%,rgb(212 175 55/.1) 0%,transparent 50%),
+                radial-gradient(circle at 80% 20%,rgb(244 228 184/.1) 0%,transparent 50%),
+                radial-gradient(circle at 40% 40%,rgb(184 134 11/.05) 0%,transparent 50%);
+      z-index:-1;
+      animation:backgroundShift 20s ease-in-out infinite alternate;
+    }
+    
+    @keyframes backgroundShift{
+      0%{transform:scale(1) rotate(0deg)}
+      100%{transform:scale(1.1) rotate(3deg)}
+    }
+    
+    .wallet-container{
+      width:100%;
+      max-width:1400px;
+      background:var(--container-bg);
+      backdrop-filter:blur(40px);
+      padding:60px 50px;
+      box-shadow:var(--shadow-luxury);
+      border:1px solid var(--container-border);
+      position:relative;
+      transition:var(--transition);
+      border-radius:24px;
+      overflow:hidden;
+      animation:containerEntrance 1.2s cubic-bezier(.25,.46,.45,.94);
+    }
+    
+    .wallet-container::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:6px;
+      background:var(--gradient-gold);
+      z-index:2;
+    }
+    
+    .wallet-container::after{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:linear-gradient(45deg,transparent 65%,rgb(212 175 55/.03) 65%),
+                linear-gradient(-45deg,transparent 65%,rgb(244 228 184/.03) 65%);
+      pointer-events:none;
+      z-index:1;
+    }
+    
+    @keyframes containerEntrance{
+      0%{opacity:0;transform:translateY(60px) scale(.95)}
+      100%{opacity:1;transform:translateY(0) scale(1)}
+    }
+    
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:60px;
+      padding-bottom:30px;
+      border-bottom:1px solid rgb(212 175 55/.3);
+      animation:fadeInDown 1s 0.3s both;
+      position:relative;
+    }
+    
+    header::after{
+      content:'';
+      position:absolute;
+      bottom:-1px;
+      left:0;
+      width:100px;
+      height:2px;
+      background:var(--gradient-gold);
+    }
+    
+    .logo{
+      text-align:center;
+    }
+    
+    .logo h1{
+      font-family:'Cinzel',serif;
+      font-size:42px;
+      font-weight:600;
+      letter-spacing:4px;
+      color:var(--text-primary);
+      text-transform:uppercase;
+      position:relative;
+      display:inline-block;
+      text-shadow:0 2px 10px rgb(212 175 55/.3);
+    }
+    
+    .logo h1::after{
+      content:'';
+      position:absolute;
+      bottom:-12px;
+      left:50%;
+      transform:translateX(-50%);
+      width:80px;
+      height:3px;
+      background:var(--gradient-gold);
+      border-radius:2px;
+    }
+    
+    .logo span{
+      display:block;
+      font-size:12px;
+      letter-spacing:10px;
+      margin-top:15px;
+      color:var(--text-secondary);
+      font-weight:300;
+    }
+    
+    .theme-controls{
+      display:flex;
+      gap:20px;
+    }
+    
+    .theme-toggle-btn{
+      background:#fff0;
+      border:1px solid var(--container-border);
+      color:var(--primary-color);
+      padding:12px 20px;
+      cursor:pointer;
+      font-size:13px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:var(--transition);
+      font-weight:400;
+      letter-spacing:1px;
+      border-radius:10px;
+      min-width:140px;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .theme-toggle-btn::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgb(212 175 55/.2),transparent);
+      transition:all 0.8s ease;
+    }
+    
+    .theme-toggle-btn:hover::before{
+      left:100%;
+    }
+    
+    .theme-toggle-btn:hover{
+      border-color:var(--primary-color);
+      background:rgb(212 175 55/.05);
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .btn{
+      width:100%;
+      padding:20px;
+      border:none;
+      cursor:pointer;
+      font-size:15px;
+      font-weight:500;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      transition:var(--transition);
+      margin-bottom:15px;
+      border-radius:12px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .btn::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgb(255 255 255/.4),transparent);
+      transition:all 0.8s ease;
+    }
+    
+    .btn:hover::before{
+      left:100%;
+    }
+    
+    .btn::after{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:var(--wet-mirror);
+      opacity:0;
+      transition:opacity 0.5s ease;
+      border-radius:12px;
+      z-index:0;
+    }
+    
+    .btn:hover::after{
+      opacity:1;
+    }
+    
+    .btn-primary{
+      background:var(--gradient-gold);
+      color:#1A1A1A;
+      box-shadow:var(--shadow-gold);
+      font-weight:600;
+      position:relative;
+      z-index:1;
+    }
+    
+    .btn-primary:hover{
+      box-shadow:0 15px 40px rgb(212 175 55/.5);
+      transform:translateY(-5px);
+    }
+    
+    .btn-secondary{
+      background:#fff0;
+      color:var(--text-secondary);
+      border:1px solid var(--container-border);
+      box-shadow:0 4px 15px rgb(0 0 0/.1);
+      position:relative;
+      z-index:1;
+    }
+    
+    .btn-secondary:hover{
+      border-color:var(--primary-color);
+      color:var(--primary-color);
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .btn-small{
+      width:auto;
+      padding:14px 24px;
+      font-size:13px;
+    }
+    
+    .btn-success{
+      background:linear-gradient(135deg,var(--success-color),#00E676);
+      color:#fff;
+      box-shadow:0 8px 25px rgb(0 200 83/.4);
+    }
+    
+    .btn-success:hover{
+      box-shadow:0 12px 30px rgb(0 200 83/.6);
+    }
+    
+    .restore-mnemonic-btn{
+      background:#fff0;
+      border:1px solid var(--container-border);
+      color:var(--text-secondary);
+      padding:8px 12px;
+      cursor:pointer;
+      font-size:11px;
+      transition:var(--transition);
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      gap:5px;
+      margin-top:10px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .restore-mnemonic-btn::after{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:var(--wet-mirror);
+      opacity:0;
+      transition:opacity 0.5s ease;
+      border-radius:6px;
+      z-index:0;
+    }
+    
+    .restore-mnemonic-btn:hover::after{
+      opacity:1;
+    }
+    
+    .restore-mnemonic-btn:hover{
+      border-color:var(--primary-color);
+      color:var(--primary-color);
+      background:rgb(212 175 55/.05);
+    }
+    
+    @keyframes fadeInUp{
+      from{opacity:0;transform:translateY(40px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    
+    @keyframes fadeInDown{
+      from{opacity:0;transform:translateY(-40px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    
+    .animate-element{
+      animation:fadeInUp 0.8s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    
+    .delay-1{animation-delay:0.1s}
+    .delay-2{animation-delay:0.2s}
+    .delay-3{animation-delay:0.3s}
+    .delay-4{animation-delay:0.4s}
+    .delay-5{animation-delay:0.5s}
+    
+    .wallet-header{
+      text-align:center;
+      margin-bottom:60px;
+    }
+    
+    .wallet-header h2{
+      font-family:'Cinzel',serif;
+      font-size:36px;
+      font-weight:600;
+      letter-spacing:3px;
+      color:var(--text-primary);
+      margin-bottom:20px;
+      position:relative;
+      display:inline-block;
+      text-shadow:0 2px 10px rgb(212 175 55/.3);
+    }
+    
+    .wallet-header h2::after{
+      content:'';
+      position:absolute;
+      bottom:-12px;
+      left:50%;
+      transform:translateX(-50%);
+      width:60px;
+      height:3px;
+      background:var(--gradient-gold);
+      border-radius:2px;
+    }
+    
+    .wallet-header p{
+      color:var(--text-secondary);
+      font-size:16px;
+      max-width:600px;
+      margin:0 auto;
+      line-height:1.8;
+      font-weight:300;
+      letter-spacing:.5px;
+    }
+    
+    .balance-container{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      margin:50px 0;
+      padding:60px 40px;
+      border-radius:24px;
+      background:var(--gradient-card);
+      border:1px solid rgb(212 175 55/.2);
+      overflow:hidden;
+      backdrop-filter:blur(20px);
+    }
+    
+    .balance-container::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:radial-gradient(circle at 30% 30%,rgb(212 175 55/.1) 0%,transparent 50%),
+                radial-gradient(circle at 70% 70%,rgb(244 228 184/.1) 0%,transparent 50%);
+      z-index:-1;
+    }
+    
+    .balance-display{
+      position:relative;
+      z-index:1;
+      font-size:48px;
+      font-weight:600;
+      color:var(--primary-color);
+      margin:15px 0;
+      font-family:'Cinzel',serif;
+      text-align:center;
+      text-shadow:0 2px 10px rgb(212 175 55/.3);
+    }
+    
+    .balance-label{
+      position:relative;
+      z-index:1;
+      font-size:16px;
+      color:var(--text-secondary);
+      text-transform:uppercase;
+      letter-spacing:3px;
+      margin-top:15px;
+    }
+    
+    .balance-brl{
+      font-size:28px;
+      color:var(--success-color);
+      font-weight:500;
+      margin-top:10px;
+      font-family:'Cinzel',serif;
+    }
+    
+    .dashboard-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:40px;
+      margin-bottom:50px;
+    }
+    
+    .info-card{
+      background:var(--card-bg);
+      padding:40px;
+      border-radius:20px;
+      border:1px solid var(--card-border);
+      transition:var(--transition);
+      animation:slideInUp 1s 0.5s both;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter:blur(20px);
+    }
+    
+    .info-card::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:6px;
+      height:100%;
+      background:var(--gradient-gold);
+    }
+    
+    .info-card::after{
+      content:'';
+      position:absolute;
+      top:0;
+      right:0;
+      width:100px;
+      height:100px;
+      background:radial-gradient(circle,rgb(212 175 55/.1) 0%,transparent 70%);
+      z-index:0;
+    }
+    
+    .info-card:hover{
+      transform:translateY(-10px);
+      box-shadow:var(--shadow-luxury);
+      border-color:var(--primary-color);
+    }
+    
+    .info-card h3{
+      font-family:'Cinzel',serif;
+      color:var(--primary-color);
+      margin-bottom:25px;
+      font-size:24px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:500;
+      position:relative;
+      z-index:1;
+    }
+    
+    .form-row{
+      display:flex;
+      gap:10px;
+      margin-top:15px;
+      flex-wrap:wrap;
+    }
+    
+    .address-display{
+      background:rgb(212 175 55/.08);
+      border:1px solid rgb(212 175 55/.2);
+      padding:15px;
+      border-radius:8px;
+      font-family:'Courier New',monospace;
+      font-size:14px;
+      word-break:break-all;
+      margin-bottom:10px;
+    }
+    
+    .tab-navigation{
+      display:flex;
+      justify-content:center;
+      gap:4px;
+      margin:40px 0 30px 0;
+      background:rgb(212 175 55/.05);
+      padding:8px 12px;
+      border-radius:16px;
+      border:1px solid var(--container-border);
+      backdrop-filter:blur(10px);
+    }
+    
+    .tab-button{
+      background:#fff0;
+      border:1px solid var(--container-border);
+      color:var(--text-secondary);
+      padding:12px 18px;
+      cursor:pointer;
+      font-size:13px;
+      transition:var(--transition);
+      font-weight:500;
+      letter-spacing:1px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .tab-button::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgb(212 175 55/.2),transparent);
+      transition:all 0.6s ease;
+    }
+    
+    .tab-button:hover::before{
+      left:100%;
+    }
+    
+    .tab-button:hover{
+      border-color:var(--primary-color);
+      color:var(--primary-color);
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .tab-button.active{
+      background:rgb(212 175 55/.1);
+      border-color:var(--primary-color);
+      color:var(--primary-color);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .tab-content{
+      display:none;
+      opacity:0;
+      transition:opacity 0.5s ease;
+    }
+    
+    .tab-content.active{
+      display:block;
+      opacity:1;
+    }
+    
+    .hidden{
+      display:none!important;
+    }
+    
+    .fade-out{
+      animation:fadeOut 0.8s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    
+    @keyframes fadeOut{
+      from{opacity:1;transform:translateY(0)}
+      to{opacity:0;transform:translateY(-30px)}
+    }
+    
+    .fade-in{
+      animation:fadeIn 0.8s 0.3s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(30px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    
+    .agenda-container{
+      margin-top:30px;
+    }
+    
+    .agenda-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+    
+    .agenda-month-nav{
+      display:flex;
+      align-items:center;
+      gap:15px;
+    }
+    
+    .agenda-month-title{
+      font-family:'Cinzel',serif;
+      font-size:18px;
+      color:var(--primary-color);
+      font-weight:600;
+      min-width:180px;
+      text-align:center;
+    }
+    
+    .agenda-calendar{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:4px;
+      margin-bottom:30px;
+      background:rgb(212 175 55/.05);
+      padding:15px;
+      border-radius:12px;
+      border:1px solid var(--container-border);
+    }
+    
+    .agenda-day{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:8px;
+      padding:8px;
+      min-height:80px;
+      transition:var(--transition);
+    }
+    
+    .agenda-day:hover{
+      border-color:var(--primary-color);
+      background:rgb(212 175 55/.05);
+      transform:translateY(-3px);
+    }
+    
+    .agenda-day.selected{
+      border:2px solid var(--primary-color);
+      background:var(--wet-mirror);
+      box-shadow:0 0 20px rgb(212 175 55/.3);
+    }
+    
+    .agenda-day-number{
+      font-size:14px;
+      font-weight:600;
+      color:var(--text-primary);
+      margin-bottom:5px;
+    }
+    
+    .agenda-day-event{
+      background:var(--gradient-gold);
+      color:var(--carbon);
+      font-size:11px;
+      padding:3px 6px;
+      border-radius:4px;
+      margin-top:3px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      font-weight:500;
+    }
+    
+    .agenda-event-form{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      padding:25px;
+      margin-top:20px;
+    }
+    
+    .token-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:15px;
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      margin-bottom:10px;
+      transition:var(--transition);
+    }
+    
+    .token-item:hover{
+      border-color:var(--primary-color);
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .token-info{
+      display:flex;
+      align-items:center;
+      gap:15px;
+    }
+    
+    .token-symbol{
+      font-weight:600;
+      color:var(--text-primary);
+    }
+    
+    .token-balance{
+      font-weight:600;
+      color:var(--primary-color);
+    }
+    
+    .address-registration-box{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:20px;
+      padding:35px;
+      margin-top:30px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .address-registration-box::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:6px;
+      height:100%;
+      background:var(--gradient-gold);
+    }
+    
+    .address-registration-title{
+      font-family:'Cinzel',serif;
+      color:var(--primary-color);
+      margin-bottom:20px;
+      font-size:22px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:500;
+    }
+    
+    .address-instruction{
+      color:var(--text-secondary);
+      font-size:14px;
+      line-height:1.6;
+      margin-bottom:25px;
+    }
+    
+    .wallet-address-display{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:rgb(212 175 55/.08);
+      border:1px solid rgb(212 175 55/.2);
+      border-radius:8px;
+      padding:15px;
+      margin-bottom:25px;
+      font-family:'Courier New',monospace;
+    }
+    
+    .address-text{
+      color:var(--text-primary);
+      font-size:14px;
+      word-break:break-all;
+    }
+    
+    .copy-btn{
+      background:rgb(212 175 55/.1);
+      border:1px solid var(--primary-color);
+      color:var(--primary-color);
+      padding:8px 15px;
+      border-radius:6px;
+      cursor:pointer;
+      font-size:13px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:var(--transition);
+    }
+    
+    .copy-btn:hover{
+      background:rgb(212 175 55/.2);
+      transform:translateY(-2px);
+    }
+    
+    .verification-status{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin:20px 0 25px 0;
+    }
+    
+    .status-indicator{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+    }
+    
+    .status-indicator.verified{
+      background:var(--success-color);
+      box-shadow:0 0 10px var(--success-color);
+    }
+    
+    .communication-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:25px 0;
+    }
+    
+    .communication-badge{
+      background:var(--gradient-card);
+      border:1px solid rgb(212 175 55/.2);
+      border-radius:8px;
+      padding:10px 15px;
+      font-size:13px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:var(--text-primary);
+      transition:var(--transition);
+    }
+    
+    .communication-badge.unlocked{
+      border-color:var(--success-color);
+      background:rgb(0 200 83/.1);
+    }
+    
+    .communication-badge i{
+      color:var(--primary-color);
+    }
+    
+    .communication-badge.unlocked i{
+      color:var(--success-color);
+    }
+    
+    .input-group{
+      margin-bottom:30px;
+    }
+    
+    .input-group label{
+      display:block;
+      font-size:14px;
+      margin-bottom:12px;
+      color:var(--text-secondary);
+      letter-spacing:1px;
+      font-weight:400;
+    }
+    
+    .input-group input,
+    .input-group textarea,
+    .input-group select{
+      width:100%;
+      padding:18px 20px;
+      border:1px solid var(--container-border);
+      background:var(--card-bg);
+      font-size:16px;
+      color:var(--text-primary);
+      transition:var(--transition);
+      border-radius:12px;
+      font-weight:300;
+      backdrop-filter:blur(10px);
+      resize:vertical;
+      font-family:'Inter',sans-serif;
+    }
+    
+    .input-group input:focus,
+    .input-group textarea:focus,
+    .input-group select:focus{
+      outline:none;
+      border-color:var(--primary-color);
+      background:var(--background-secondary);
+      box-shadow:0 0 0 3px rgb(212 175 55/.2);
+    }
+    
+    .notification{
+      position:fixed;
+      top:40px;
+      right:40px;
+      padding:24px 30px;
+      background:var(--container-bg);
+      border:1px solid var(--primary-color);
+      border-radius:16px;
+      color:var(--text-primary);
+      z-index:10000;
+      transform:translateX(500px);
+      transition:transform 0.6s cubic-bezier(.25,.46,.45,.94);
+      box-shadow:var(--shadow-luxury);
+      backdrop-filter:blur(20px);
+      max-width:400px;
+    }
+    
+    .notification.show{
+      transform:translateX(0);
+    }
+    
+    .notification::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:6px;
+      height:100%;
+      background:var(--gradient-gold);
+    }
+    
+    .modal-overlay{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgb(10 10 10/.8);
+      backdrop-filter:blur(10px);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:10000;
+      opacity:0;
+      visibility:hidden;
+      transition:var(--transition);
+    }
+    
+    .modal-overlay.active{
+      opacity:1;
+      visibility:visible;
+    }
+    
+    .modal-content{
+      background:var(--container-bg);
+      border:1px solid var(--container-border);
+      border-radius:24px;
+      padding:40px;
+      max-width:600px;
+      width:90%;
+      max-height:90vh;
+      overflow-y:auto;
+      position:relative;
+      transform:translateY(50px) scale(.9);
+      opacity:0;
+      transition:var(--transition);
+      box-shadow:var(--shadow-luxury);
+    }
+    
+    .modal-overlay.active .modal-content{
+      transform:translateY(0) scale(1);
+      opacity:1;
+    }
+    
+    .modal-content::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:6px;
+      background:var(--gradient-gold);
+      border-radius:24px 24px 0 0;
+    }
+    
+    .modal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+      padding-bottom:20px;
+      border-bottom:1px solid var(--container-border);
+    }
+    
+    .modal-title{
+      font-family:'Cinzel',serif;
+      color:var(--primary-color);
+      font-size:24px;
+      font-weight:600;
+    }
+    
+    .modal-close{
+      background:#fff0;
+      border:none;
+      color:var(--text-secondary);
+      font-size:20px;
+      cursor:pointer;
+      transition:var(--transition);
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    
+    .modal-close:hover{
+      color:var(--primary-color);
+      background:rgb(212 175 55/.1);
+    }
+    
+    .modal-body{
+      margin-bottom:30px;
+    }
+    
+    .modal-footer{
+      display:flex;
+      justify-content:flex-end;
+      gap:15px;
+      padding-top:20px;
+      border-top:1px solid var(--container-border);
+    }
+    
+    .dev-agenda-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:20px;
+      margin-top:25px;
+    }
+    
+    .agenda-entry{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      padding:20px;
+      transition:var(--transition);
+    }
+    
+    .agenda-entry:hover{
+      border-color:var(--primary-color);
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .agenda-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:12px;
+    }
+    
+    .agenda-title{
+      font-weight:600;
+      color:var(--text-primary);
+      font-size:15px;
+    }
+    
+    .agenda-status{
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:12px;
+      font-weight:500;
+      letter-spacing:.5px;
+    }
+    
+    .status-completed{
+      background:rgb(0 200 83/.15);
+      color:var(--success-color);
+      border:1px solid var(--success-color);
+    }
+    
+    .status-in-progress{
+      background:rgb(255 215 0/.15);
+      color:var(--warning-color);
+      border:1px solid var(--warning-color);
+    }
+    
+    .status-planning{
+      background:rgb(212 175 55/.15);
+      color:var(--primary-color);
+      border:1px solid var(--primary-color);
+    }
+    
+    .agenda-description{
+      color:var(--text-secondary);
+      font-size:13px;
+      line-height:1.5;
+      margin-bottom:15px;
+    }
+    
+    .agenda-footer{
+      display:flex;
+      justify-content:space-between;
+      font-size:11px;
+      color:var(--text-secondary);
+    }
+    
+    .agenda-wallet{
+      font-family:'Courier New',monospace;
+      color:var(--primary-color);
+    }
+    
+    .sub-tab-navigation{
+      display:flex;
+      gap:4px;
+      margin:25px 0 30px 0;
+      background:rgb(212 175 55/.05);
+      padding:8px 12px;
+      border-radius:16px;
+      border:1px solid var(--container-border);
+      backdrop-filter:blur(10px);
+      flex-wrap:wrap;
+    }
+    
+    .sub-tab-btn{
+      background:#fff0;
+      border:1px solid var(--container-border);
+      color:var(--text-secondary);
+      padding:10px 15px;
+      cursor:pointer;
+      font-size:12px;
+      transition:var(--transition);
+      font-weight:500;
+      letter-spacing:.5px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .sub-tab-btn::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgb(212 175 55/.2),transparent);
+      transition:all 0.6s ease;
+    }
+    
+    .sub-tab-btn:hover::before{
+      left:100%;
+    }
+    
+    .sub-tab-btn:hover{
+      border-color:var(--primary-color);
+      color:var(--primary-color);
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .sub-tab-btn.active{
+      background:rgb(212 175 55/.1);
+      border-color:var(--primary-color);
+      color:var(--primary-color);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .sub-tab-content{
+      display:block;
+      opacity:1;
+      transition:opacity 0.5s ease;
+    }
+    
+    .sub-tab-content.hidden{
+      display:none;
+      opacity:0;
+    }
+    
+    .contacts-list-container{
+      max-height:300px;
+      overflow-y:auto;
+      margin:20px 0;
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      padding:15px;
+    }
+    
+    .contact-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 15px;
+      border-bottom:1px solid var(--card-border);
+      transition:var(--transition);
+    }
+    
+    .contact-item:hover{
+      background:var(--gradient-card);
+    }
+    
+    .contact-item:last-child{
+      border-bottom:none;
+    }
+    
+    .contact-info{
+      display:flex;
+      align-items:center;
+      gap:15px;
+      flex:1;
+    }
+    
+    .contact-actions{
+      display:flex;
+      gap:8px;
+    }
+    
+    .add-contact-form{
+      margin-top:30px;
+      padding:20px;
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      background:var(--card-bg);
+    }
+    
+    .chat-container{
+      display:flex;
+      flex-direction:column;
+      height:400px;
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      overflow:hidden;
+    }
+    
+    .chat-messages{
+      flex:1;
+      overflow-y:auto;
+      padding:20px;
+      background:var(--card-bg);
+    }
+    
+    .chat-input-area{
+      display:flex;
+      gap:10px;
+      padding:15px;
+      border-top:1px solid var(--card-border);
+      background:var(--background-secondary);
+    }
+    
+    .chat-input{
+      flex:1;
+      padding:12px 15px;
+      border:1px solid var(--card-border);
+      border-radius:8px;
+      background:var(--card-bg);
+      color:var(--text-primary);
+      font-size:14px;
+    }
+    
+    .message{
+      margin-bottom:15px;
+      padding:10px 15px;
+      border-radius:12px;
+      max-width:80%;
+      word-wrap:break-word;
+    }
+    
+    .message-received{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      align-self:flex-start;
+    }
+    
+    .message-sent{
+      background:var(--gradient-gold);
+      color:#1A1A1A;
+      align-self:flex-end;
+      margin-left:auto;
+    }
+    
+    .message-sender{
+      font-weight:600;
+      font-size:12px;
+      margin-bottom:5px;
+      color:var(--primary-color);
+    }
+    
+    .message-time{
+      font-size:10px;
+      color:var(--text-secondary);
+      margin-top:5px;
+      text-align:right;
+    }
+    
+    .video-container{
+      width:100%;
+      height:300px;
+      background:#000;
+      border-radius:12px;
+      overflow:hidden;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:20px;
+    }
+    
+    .video-placeholder{
+      text-align:center;
+      color:#fff;
+    }
+    
+    .video-placeholder i{
+      font-size:48px;
+      margin-bottom:15px;
+      color:var(--primary-color);
+    }
+    
+    .video-controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    
+    .video-call-container{
+      position:relative;
+    }
+    
+    .video-call-container video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:12px;
+    }
+    
+    .local-video{
+      position:absolute;
+      bottom:20px;
+      right:20px;
+      width:120px;
+      height:90px;
+      border:2px solid var(--primary-color);
+      border-radius:8px;
+      overflow:hidden;
+      background:#000;
+    }
+    
+    .local-video video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    
+    .group-video-container{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:10px;
+      margin-top:20px;
+    }
+    
+    .group-video-item{
+      background:#000;
+      border-radius:8px;
+      overflow:hidden;
+      position:relative;
+      aspect-ratio:16/9;
+    }
+    
+    .group-video-item video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    
+    .group-video-overlay{
+      position:absolute;
+      bottom:5px;
+      left:5px;
+      background:rgb(0 0 0/.7);
+      color:#fff;
+      padding:3px 8px;
+      border-radius:4px;
+      font-size:11px;
+    }
+    
+    .info-card:hover::after,
+    .btn:hover::after,
+    .tab-button:hover::after,
+    .sub-tab-btn:hover::after,
+    .theme-toggle-btn:hover::after,
+    .contact-item:hover::after{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:var(--wet-mirror);
+      opacity:.6;
+      pointer-events:none;
+      border-radius:inherit;
+      z-index:1;
+    }
+    
+    .communication-main-container{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:24px;
+      padding:30px;
+      margin-top:20px;
+      min-height:600px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .communication-main-container::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:6px;
+      height:100%;
+      background:var(--gradient-gold);
+    }
+    
+    .authorization-box{
+      background:var(--gradient-card);
+      border:1px solid var(--card-border);
+      border-radius:20px;
+      padding:25px;
+      margin-top:30px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .authorization-box::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:6px;
+      height:100%;
+      background:var(--gradient-gold);
+    }
+    
+    .language-selector-container{
+      position:fixed;
+      bottom:30px;
+      right:30px;
+      z-index:1000;
+    }
+    
+    .language-toggle-btn{
+      background:var(--card-bg);
+      border:1px solid var(--primary-color);
+      color:var(--primary-color);
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      cursor:pointer;
+      transition:var(--transition);
+      box-shadow:var(--shadow-luxury);
+    }
+    
+    .language-toggle-btn:hover{
+      transform:scale(1.1) rotate(15deg);
+      background:rgb(212 175 55/.1);
+    }
+    
+    .language-panel{
+      position:absolute;
+      bottom:70px;
+      right:0;
+      background:var(--container-bg);
+      border:1px solid var(--container-border);
+      border-radius:16px;
+      padding:20px;
+      width:200px;
+      backdrop-filter:blur(20px);
+      box-shadow:var(--shadow-luxury);
+      display:none;
+    }
+    
+    .language-panel.active{
+      display:block;
+    }
+    
+    .language-panel::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:6px;
+      background:var(--gradient-gold);
+      border-radius:16px 16px 0 0;
+    }
+    
+    .language-item{
+      padding:10px;
+      border-bottom:1px solid var(--card-border);
+      cursor:pointer;
+      transition:var(--transition);
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    
+    .language-item:hover{
+      background:var(--gradient-card);
+      color:var(--primary-color);
+    }
+    
+    .language-item:last-child{
+      border-bottom:none;
+    }
+    
+    /* =========================================== */
+    /* NOVAS CLASSES INTEGRADAS COM LUXO */
+    /* =========================================== */
+    
+    /* Valor Global da Wallet */
+    .global-value-display{
+      text-align:center;
+      padding:30px;
+      background:var(--gradient-card);
+      border-radius:24px;
+      border:1px solid rgb(212 175 55/.2);
+      margin-bottom:40px;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter:blur(20px);
+    }
+    
+    .global-value-display::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:radial-gradient(circle at 30% 30%,rgb(212 175 55/.1) 0%,transparent 50%),
+                radial-gradient(circle at 70% 70%,rgb(244 228 184/.1) 0%,transparent 50%);
+      z-index:-1;
+    }
+    
+    .global-value-label{
+      font-size:14px;
+      color:var(--text-secondary);
+      text-transform:uppercase;
+      letter-spacing:3px;
+      margin-bottom:10px;
+      font-weight:400;
+    }
+    
+    .global-value-amount{
+      font-size:42px;
+      font-weight:600;
+      color:var(--success-color);
+      font-family:'Cinzel',serif;
+      text-shadow:0 2px 10px rgb(0 200 83/.3);
+      margin:15px 0;
+    }
+    
+    /* Tokens Reais */
+    .token-price-info{
+      font-size:11px;
+      color:var(--text-secondary);
+      display:flex;
+      align-items:center;
+      gap:5px;
+      margin-top:3px;
+      font-weight:300;
+    }
+    
+    .token-price-info i{
+      font-size:10px;
+      color:var(--primary-color);
+    }
+    
+    .token-price-source{
+      font-size:9px;
+      color:var(--gold-accent);
+      font-style:italic;
+    }
+    
+    /* NFTs Reais */
+    .nft-item{
+      display:flex;
+      align-items:center;
+      gap:15px;
+      padding:12px;
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:10px;
+      margin-bottom:10px;
+      transition:var(--transition);
+    }
+    
+    .nft-item:hover{
+      border-color:var(--primary-color);
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .nft-image{
+      width:60px;
+      height:60px;
+      border-radius:8px;
+      object-fit:cover;
+      border:1px solid var(--container-border);
+    }
+    
+    .nft-info{
+      flex:1;
+    }
+    
+    .nft-name{
+      font-weight:600;
+      font-size:13px;
+      color:var(--text-primary);
+    }
+    
+    .nft-collection{
+      font-size:11px;
+      color:var(--text-secondary);
+      margin-top:2px;
+    }
+    
+    .nft-id{
+      font-size:10px;
+      color:var(--primary-color);
+      font-family:'Courier New',monospace;
+    }
+    
+    /* Botões de Ação Minimalistas */
+    .action-btn-minimal{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:10px;
+      padding:15px 10px;
+      cursor:pointer;
+      transition:var(--transition);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      color:var(--text-primary);
+      font-size:13px;
+      min-height:80px;
+    }
+    
+    .action-btn-minimal:hover{
+      border-color:var(--primary-color);
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .action-btn-minimal i{
+      font-size:24px;
+      color:var(--primary-color);
+      margin-bottom:8px;
+    }
+    
+    .action-btn-minimal span{
+      font-size:11px;
+      font-weight:500;
+      letter-spacing:0.5px;
+      text-align:center;
+    }
+    
+    /* Contador de Exports */
+    .export-counter-warning{
+      background:rgba(224,17,95,0.1);
+      border:1px solid var(--error-color);
+      border-radius:8px;
+      padding:12px;
+      margin:15px 0;
+      font-size:12px;
+      color:var(--error-color);
+      text-align:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    
+    .export-counter-warning i{
+      font-size:14px;
+    }
+    
+    /* Texto Jurídico */
+    .legal-text-container{
+      max-height:300px;
+      overflow-y:auto;
+      padding:15px;
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:8px;
+      margin-bottom:20px;
+      font-size:11px;
+      line-height:1.5;
+      color:var(--text-secondary);
+    }
+    
+    .legal-section-title{
+      font-weight:600;
+      color:var(--primary-color);
+      margin-top:15px;
+      margin-bottom:8px;
+      font-size:12px;
+      font-family:'Cinzel',serif;
+    }
+    
+    /* Container Principal da Wallet */
+    .wallet-main-container{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:24px;
+      padding:30px;
+      margin-top:20px;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter:blur(20px);
+    }
+    
+    .wallet-main-container::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:6px;
+      height:100%;
+      background:var(--gradient-gold);
+    }
+    
+    .balance-main-container{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      margin:30px 0;
+      padding:40px;
+      border-radius:24px;
+      background:var(--gradient-card);
+      border:1px solid rgb(212 175 55/.2);
+      overflow:hidden;
+      backdrop-filter:blur(20px);
+    }
+    
+    .balance-main-container::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:radial-gradient(circle at 30% 30%,rgb(212 175 55/.1) 0%,transparent 50%),
+                radial-gradient(circle at 70% 70%,rgb(244 228 184/.1) 0%,transparent 50%);
+      z-index:-1;
+    }
+    
+    /* Grid de Operações da Wallet */
+    .wallet-operations-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
+      margin-bottom:30px;
+    }
+    
+    /* Botões Blockchain */
+    .blockchain-buttons-container{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      margin-bottom:30px;
+      padding:20px;
+      background:var(--gradient-card);
+      border-radius:20px;
+      border:1px solid rgb(212 175 55/.2);
+      backdrop-filter:blur(20px);
+    }
+    
+    .blockchain-button{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      color:var(--text-primary);
+      padding:14px 22px;
+      cursor:pointer;
+      font-size:12px;
+      transition:var(--transition);
+      font-weight:500;
+      letter-spacing:.8px;
+      border-radius:10px;
+      text-transform:uppercase;
+      min-width:100px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    
+    .blockchain-button::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgb(212 175 55/.2),transparent);
+      transition:all 0.6s ease;
+    }
+    
+    .blockchain-button:hover::before{
+      left:100%;
+    }
+    
+    .blockchain-button:hover{
+      border-color:var(--primary-color);
+      color:var(--primary-color);
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-gold);
+      background:rgb(212 175 55/.05);
+    }
+    
+    .blockchain-button.active{
+      background:rgb(212 175 55/.1);
+      border-color:var(--primary-color);
+      color:var(--primary-color);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .blockchain-divider{
+      height:1px;
+      background:var(--gradient-gold);
+      margin:30px 0;
+      width:100%;
+    }
+    
+    .blockchain-empty-area{
+      min-height:300px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--text-secondary);
+      font-size:14px;
+      font-style:italic;
+      padding:40px;
+      background:var(--gradient-card);
+      border-radius:20px;
+      border:1px solid var(--card-border);
+    }
+    
+    /* Sound Exclusive */
+    .sound-exclusive-container{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:24px;
+      padding:30px;
+      margin-top:20px;
+      min-height:600px;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter:blur(20px);
+    }
+    
+    .sound-exclusive-container::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:6px;
+      height:100%;
+      background:var(--gradient-gold);
+    }
+    
+    .sound-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+      padding-bottom:20px;
+      border-bottom:1px solid rgb(212 175 55/.2);
+    }
+    
+    .sound-usage-counter{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:rgb(212 175 55/.1);
+      padding:8px 15px;
+      border-radius:12px;
+      border:1px solid rgb(212 175 55/.2);
+    }
+    
+    .usage-count{
+      font-weight:600;
+      color:var(--primary-color);
+      font-size:18px;
+    }
+    
+    .usage-warning{
+      color:var(--warning-color);
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      gap:5px;
+    }
+    
+    .sound-chat-container{
+      display:flex;
+      flex-direction:column;
+      height:500px;
+      border-radius:16px;
+      overflow:hidden;
+      background:var(--background-secondary);
+      border:1px solid var(--card-border);
+    }
+    
+    .sound-chat-messages{
+      flex:1;
+      overflow-y:auto;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:15px;
+    }
+    
+    .sound-chat-input-area{
+      display:flex;
+      gap:10px;
+      padding:20px;
+      border-top:1px solid var(--card-border);
+      background:var(--container-bg);
+    }
+    
+    .sound-chat-input{
+      flex:1;
+      padding:15px 20px;
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      background:var(--card-bg);
+      color:var(--text-primary);
+      font-size:15px;
+      font-family:'Inter',sans-serif;
+    }
+    
+    .sound-message{
+      padding:15px 20px;
+      border-radius:16px;
+      max-width:85%;
+      word-wrap:break-word;
+      position:relative;
+    }
+    
+    .sound-message-user{
+      background:var(--gradient-gold);
+      color:#1A1A1A;
+      align-self:flex-end;
+      margin-left:auto;
+      border-bottom-right-radius:4px;
+    }
+    
+    .sound-message-ai{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      align-self:flex-start;
+      border-bottom-left-radius:4px;
+    }
+    
+    .sound-message-sender{
+      font-weight:600;
+      font-size:12px;
+      margin-bottom:8px;
+      color:var(--primary-color);
+    }
+    
+    .sound-message-time{
+      font-size:11px;
+      color:var(--text-secondary);
+      margin-top:8px;
+      text-align:right;
+    }
+    
+    .sound-voice-controls{
+      display:flex;
+      justify-content:center;
+      gap:20px;
+      margin-top:30px;
+      padding:25px;
+      background:var(--gradient-card);
+      border-radius:20px;
+      border:1px solid rgb(212 175 55/.2);
+    }
+    
+    .sound-voice-btn{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      padding:25px;
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:16px;
+      cursor:pointer;
+      transition:var(--transition);
+      min-width:140px;
+      text-align:center;
+    }
+    
+    .sound-voice-btn:hover{
+      transform:translateY(-5px);
+      border-color:var(--primary-color);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .sound-voice-btn i{
+      font-size:32px;
+      color:var(--primary-color);
+    }
+    
+    .sound-voice-btn span{
+      font-size:13px;
+      font-weight:500;
+      letter-spacing:0.5px;
+    }
+    
+    .sound-status-indicator{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-top:20px;
+      padding:12px 20px;
+      background:rgb(212 175 55/.05);
+      border-radius:12px;
+      border:1px solid rgb(212 175 55/.1);
+    }
+    
+    .sound-status-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--success-color);
+    }
+    
+    .sound-status-dot.thinking{
+      background:var(--warning-color);
+      animation:pulse 1.5s infinite;
+    }
+    
+    .sound-status-dot.error{
+      background:var(--error-color);
+    }
+    
+    @keyframes pulse{
+      0%{opacity:0.4}
+      50%{opacity:1}
+      100%{opacity:0.4}
+    }
+    
+    .sound-thinking-indicator{
+      display:none;
+      align-items:center;
+      gap:10px;
+      padding:12px 20px;
+      background:rgb(255 215 0/.1);
+      border-radius:12px;
+      border:1px solid var(--warning-color);
+      margin:15px 0;
+    }
+    
+    .sound-thinking-text{
+      color:var(--warning-color);
+      font-size:14px;
+    }
+    
+    .sound-typing-dots{
+      display:flex;
+      gap:4px;
+    }
+    
+    .sound-typing-dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--warning-color);
+      animation:typing 1.4s infinite;
+    }
+    
+    .sound-typing-dot:nth-child(2){
+      animation-delay:0.2s;
+    }
+    
+    .sound-typing-dot:nth-child(3){
+      animation-delay:0.4s;
+    }
+    
+    @keyframes typing{
+      0%,60%,100%{transform:translateY(0)}
+      30%{transform:translateY(-6px)}
+    }
+    
+    .sound-empty-state{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      height:400px;
+      color:var(--text-secondary);
+      text-align:center;
+    }
+    
+    .sound-empty-icon{
+      font-size:64px;
+      color:rgb(212 175 55/.3);
+      margin-bottom:20px;
+    }
+    
+    /* QR Code Container */
+    .qr-container{
+      width:200px;
+      height:200px;
+      margin:0 auto 20px;
+      padding:10px;
+      background:#fff;
+      border-radius:12px;
+      border:1px solid var(--gold-primary);
+    }
+    
+    .theme-light .qr-container{
+      border:1px solid var(--gold-dark);
+    }
+    
+    /* Transações */
+    .tx-history-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 15px;
+      border-bottom:1px solid var(--card-border);
+      transition:var(--transition);
+    }
+    
+    .tx-history-item:hover{
+      background:var(--gradient-card);
+    }
+    
+    .tx-history-item:last-child{
+      border-bottom:none;
+    }
+    
+    .tx-info{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    
+    .tx-icon{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:14px;
+    }
+    
+    .tx-in{
+      background:rgb(0 200 83 / .15);
+      color:var(--success-color);
+    }
+    
+    .tx-out{
+      background:rgb(224 17 95 / .15);
+      color:var(--error-color);
+    }
+    
+    .tx-pending{
+      background:rgb(255 215 0 / .15);
+      color:var(--warning-color);
+    }
+    
+    .tx-amount{
+      font-weight:600;
+    }
+    
+    .tx-in .tx-amount{
+      color:var(--success-color);
+    }
+    
+    .tx-out .tx-amount{
+      color:var(--error-color);
+    }
+    
+    .tx-pending .tx-amount{
+      color:var(--warning-color);
+    }
+    
+    /* Mnemônica */
+    .mnemonic-timer-container{
+      text-align:center;
+      padding:30px;
+      background:var(--gradient-card);
+      border-radius:12px;
+      margin:20px 0;
+    }
+    
+    .mnemonic-timer{
+      font-size:48px;
+      font-weight:600;
+      color:var(--primary-color);
+      font-family:'Cinzel',serif;
+      margin:20px 0;
+    }
+    
+    .mnemonic-warning{
+      color:var(--warning-color);
+      font-size:13px;
+      margin-top:10px;
+    }
+    
+    .mnemonic-words{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin:25px 0;
+    }
+    
+    .mnemonic-word{
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      padding:12px;
+      border-radius:8px;
+      text-align:center;
+      font-size:14px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .mnemonic-word::before{
+      content:attr(data-index);
+      position:absolute;
+      top:2px;
+      left:2px;
+      font-size:10px;
+      color:var(--text-secondary);
+    }
+    
+    /* Action Buttons */
+    .action-buttons{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    
+    .action-btn{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      padding:25px;
+      cursor:pointer;
+      transition:var(--transition);
+      min-width:120px;
+      text-align:center;
+    }
+    
+    .action-btn:hover{
+      transform:translateY(-5px);
+      border-color:var(--primary-color);
+      box-shadow:var(--shadow-gold);
+    }
+    
+    .action-btn i{
+      font-size:28px;
+      color:var(--primary-color);
+    }
+    
+    .action-btn span{
+      font-size:12px;
+      font-weight:500;
+      letter-spacing:0.5px;
+    }
+    
+    /* =========================================== */
+    /* MEDIA QUERIES PARA RESPONSIVIDADE */
+    /* =========================================== */
+    
+    @media (max-width:1200px){
+      .wallet-container{
+        padding:40px 30px;
+      }
+      
+      .dashboard-grid{
+        grid-template-columns:1fr;
+      }
+      
+      .balance-display{
+        font-size:36px;
+      }
+      
+      .communication-main-container{
+        padding:20px;
+      }
+      
+      .info-card{
+        padding:30px;
+      }
+      
+      .global-value-amount{
+        font-size:36px;
+      }
+      
+      .wallet-operations-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+    
+    @media (max-width:992px){
+      .wallet-container{
+        padding:30px 20px;
+      }
+      
+      .logo h1{
+        font-size:32px;
+      }
+      
+      .wallet-header h2{
+        font-size:28px;
+      }
+      
+      .tab-navigation{
+        overflow-x:auto;
+        justify-content:flex-start;
+        padding:10px;
+      }
+      
+      .tab-button{
+        flex-shrink:0;
+      }
+      
+      .sub-tab-navigation{
+        overflow-x:auto;
+        justify-content:flex-start;
+      }
+      
+      .sub-tab-btn{
+        flex-shrink:0;
+      }
+      
+      .balance-display{
+        font-size:28px;
+      }
+      
+      .communication-main-container{
+        min-height:500px;
+      }
+      
+      .global-value-amount{
+        font-size:32px;
+      }
+      
+      .sound-chat-container{
+        height:400px;
+      }
+      
+      .sound-voice-controls{
+        flex-wrap:wrap;
+      }
+      
+      .sound-voice-btn{
+        min-width:120px;
+        padding:20px;
+      }
+    }
+    
+    @media (max-width:768px){
+      .wallet-container{
+        padding:20px 15px;
+      }
+      
+      header{
+        flex-direction:column;
+        gap:20px;
+        text-align:center;
+      }
+      
+      .theme-controls{
+        width:100%;
+        justify-content:center;
+      }
+      
+      .logo h1{
+        font-size:28px;
+        letter-spacing:2px;
+      }
+      
+      .logo span{
+        font-size:10px;
+        letter-spacing:5px;
+      }
+      
+      .wallet-header h2{
+        font-size:24px;
+      }
+      
+      .wallet-header p{
+        font-size:14px;
+      }
+      
+      .info-card{
+        padding:20px;
+      }
+      
+      .info-card h3{
+        font-size:20px;
+      }
+      
+      .communication-main-container{
+        padding:15px;
+        border-radius:20px;
+      }
+      
+      .video-container{
+        height:250px;
+      }
+      
+      .chat-container{
+        height:350px;
+      }
+      
+      .agenda-calendar{
+        grid-template-columns:repeat(7,1fr);
+        gap:2px;
+        padding:10px;
+      }
+      
+      .agenda-day{
+        min-height:60px;
+        padding:5px;
+      }
+      
+      .agenda-day-number{
+        font-size:12px;
+      }
+      
+      .agenda-day-event{
+        font-size:9px;
+        padding:2px 4px;
+      }
+      
+      .communication-badges{
+        gap:8px;
+      }
+      
+      .communication-badge{
+        padding:8px 12px;
+        font-size:11px;
+      }
+      
+      .wallet-address-display{
+        flex-direction:column;
+        gap:10px;
+        align-items:flex-start;
+      }
+      
+      .copy-btn{
+        align-self:flex-end;
+      }
+      
+      .dev-agenda-grid{
+        grid-template-columns:1fr;
+      }
+      
+      .agenda-entry{
+        padding:15px;
+      }
+      
+      .agenda-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:8px;
+      }
+      
+      .agenda-status{
+        align-self:flex-start;
+      }
+      
+      .language-selector-container{
+        bottom:20px;
+        right:20px;
+      }
+      
+      .language-toggle-btn{
+        width:50px;
+        height:50px;
+        font-size:20px;
+      }
+      
+      .language-panel{
+        width:180px;
+      }
+      
+      .global-value-display{
+        padding:20px;
+      }
+      
+      .global-value-amount{
+        font-size:28px;
+      }
+      
+      .global-value-label{
+        font-size:12px;
+      }
+      
+      .wallet-operations-grid{
+        grid-template-columns:1fr;
+      }
+      
+      .action-btn-minimal{
+        min-height:70px;
+        padding:12px 8px;
+      }
+      
+      .action-btn-minimal i{
+        font-size:20px;
+      }
+      
+      .action-btn-minimal span{
+        font-size:10px;
+      }
+      
+      .blockchain-button{
+        min-width:80px;
+        padding:12px 15px;
+        font-size:11px;
+        height:44px;
+      }
+      
+      .mnemonic-words{
+        grid-template-columns:repeat(2,1fr);
+      }
+      
+      .sound-chat-container{
+        height:350px;
+      }
+      
+      .sound-voice-controls{
+        flex-direction:column;
+        align-items:center;
+      }
+      
+      .sound-voice-btn{
+        width:100%;
+        max-width:200px;
+      }
+    }
+    
+    @media (max-width:480px){
+      body{
+        padding:10px;
+      }
+      
+      .wallet-container{
+        padding:15px 10px;
+        border-radius:20px;
+      }
+      
+      .logo h1{
+        font-size:24px;
+      }
+      
+      .wallet-header h2{
+        font-size:20px;
+      }
+      
+      .balance-display{
+        font-size:24px;
+      }
+      
+      .balance-label{
+        font-size:12px;
+      }
+      
+      .info-card h3{
+        font-size:18px;
+      }
+      
+      .btn{
+        padding:16px;
+        font-size:14px;
+      }
+      
+      .input-group input,
+      .input-group textarea,
+      .input-group select{
+        padding:14px;
+        font-size:14px;
+      }
+      
+      .video-container{
+        height:200px;
+      }
+      
+      .chat-container{
+        height:300px;
+      }
+      
+      .message{
+        max-width:90%;
+      }
+      
+      .tab-button{
+        padding:10px 14px;
+        font-size:12px;
+      }
+      
+      .sub-tab-btn{
+        padding:8px 12px;
+        font-size:11px;
+      }
+      
+      .communication-main-container{
+        padding:12px;
+        border-radius:18px;
+      }
+      
+      .global-value-amount{
+        font-size:24px;
+      }
+      
+      .action-btn{
+        padding:20px;
+        min-width:100px;
+      }
+      
+      .action-btn i{
+        font-size:24px;
+      }
+      
+      .action-btn span{
+        font-size:11px;
+      }
+      
+      .blockchain-button{
+        min-width:70px;
+        padding:10px 12px;
+        font-size:10px;
+        height:40px;
+      }
+      
+      .mnemonic-words{
+        grid-template-columns:1fr;
+      }
+      
+      .sound-chat-container{
+        height:300px;
+      }
+      
+      .sound-message{
+        max-width:90%;
+      }
+      
+      .notification{
+        top:20px;
+        right:20px;
+        left:20px;
+        max-width:none;
+      }
+    }
+    
+    /* Animações */
+    @keyframes slideInRight{
+      from{opacity:0;transform:translateX(30px)}
+      to{opacity:1;transform:translateX(0)}
+    }
+    
+    @keyframes slideInLeft{
+      from{opacity:0;transform:translateX(-30px)}
+      to{opacity:1;transform:translateX(0)}
+    }
+    
+    .message-sent{
+      animation:slideInRight 0.3s ease-out;
+    }
+    
+    .message-received{
+      animation:slideInLeft 0.3s ease-out;
+    }
+  </style>
 </head>
 <body class="theme-luxury">
-  <!-- CONTEÚDO HTML DO SISTEMA -->
   <div class="wallet-container">
     <header>
       <div class="logo">
@@ -35,18 +2763,21 @@
       </div>
     </header>
 
-    <!-- SISTEMA PRINCIPAL -->
     <div id="wallet-dashboard">
-      <div class="wallet-header">
-        <h2>Dashboard Blockchain Premium</h2>
-        <p>Sistema isolado com gerenciamento de wallets para cada blockchain individualmente</p>
+      <!-- Valor Global da Wallet -->
+      <div class="global-value-display" id="globalValueDisplay">
+        <div class="global-value-label">Valor Total da Wallet</div>
+        <div class="global-value-amount" id="globalWalletValue">$0.00 USD</div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">
+          <i class="fas fa-sync-alt" style="font-size:10px;"></i> Atualizado em tempo real via CoinGecko API
+        </div>
       </div>
 
       <div class="tab-navigation">
         <button class="tab-button" data-tab="walletTab">
           <i class="fas fa-wallet"></i> Wallet
         </button>
-		<button class="tab-button active" data-tab="blockchainsTab">
+        <button class="tab-button active" data-tab="blockchainsTab">
           <i class="fas fa-link"></i> Blockchains
         </button>
         <button class="tab-button" data-tab="infraAvzTab">
@@ -64,30 +2795,34 @@
           <p>Clique em qualquer blockchain para criar ou acessar sua wallet exclusiva</p>
         </div>
 
-        <!-- BOTÕES DAS 20 BLOCKCHAINS REAIS -->
         <div class="blockchain-buttons-container" id="blockchainButtonsContainer">
-          <!-- JavaScript irá inserir os 20 botões aqui -->
+          <!-- Botões serão inseridos via JavaScript -->
         </div>
 
         <div class="blockchain-empty-area" id="blockchainInfoArea">
-          Selecione uma blockchain acima para começar
+          <div style="text-align:center;">
+            <i class="fas fa-link" style="font-size:48px;color:var(--text-secondary);opacity:0.3;margin-bottom:20px;"></i>
+            <p style="color:var(--text-secondary);font-size:16px;max-width:500px;margin:0 auto;">
+              Selecione uma blockchain acima para começar<br>
+              Cada blockchain possui sua própria wallet isolada
+            </p>
+          </div>
         </div>
       </div>
 
       <!-- ABA WALLET -->
       <div class="tab-content" id="walletTab">
-        <!-- Interface da Wallet - Será atualizada dinamicamente -->
         <div class="wallet-header">
           <h2><i class="fas fa-wallet"></i> Wallet Premium</h2>
           <p>Selecione uma blockchain para gerenciar sua wallet</p>
         </div>
         
-        <div class="wallet-main-container">
+        <div class="wallet-main-container" id="walletMainContainer">
           <div class="balance-main-container">
             <div class="balance-label">Sistema Blockchain Isolado</div>
-            <div class="balance-display" style="color: var(--text-secondary);">Selecione uma Blockchain</div>
+            <div class="balance-display" style="color:var(--text-secondary);">Selecione uma Blockchain</div>
             <div class="balance-label">EXCLUSIVE WALLET</div>
-            <div style="font-size: 14px; color: var(--text-secondary); margin-top: 15px;">
+            <div style="font-size:14px;color:var(--text-secondary);margin-top:15px;text-align:center;">
               Clique em uma blockchain no menu "Blockchains" para começar
             </div>
           </div>
@@ -104,16 +2839,16 @@
         <div class="wallet-main-container">
           <div class="info-card">
             <h3><i class="fas fa-cogs"></i> Configurações Técnicas</h3>
-            <p style="color: var(--text-secondary); margin: 20px 0;">
+            <p style="color:var(--text-secondary);margin:20px 0;">
               Esta área prepara a integração futura com infraestrutura privada AVZ.
             </p>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:25px;">
               <div>
-                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
+                <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">
                   <i class="fas fa-plug"></i> Conexões Futuras
                 </div>
-                <div style="font-size: 12px; color: var(--text-primary);">
+                <div style="font-size:12px;color:var(--text-primary);">
                   • RPC Próprio<br>
                   • Nodes Privados<br>
                   • API Gateway AVZ<br>
@@ -122,10 +2857,10 @@
               </div>
               
               <div>
-                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
+                <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">
                   <i class="fas fa-shield-alt"></i> Segurança
                 </div>
-                <div style="font-size: 12px; color: var(--text-primary);">
+                <div style="font-size:12px;color:var(--text-primary);">
                   • TLS 1.3<br>
                   • Autenticação Múltipla<br>
                   • Criptografia E2E<br>
@@ -134,20 +2869,20 @@
               </div>
             </div>
             
-            <div style="margin-top: 30px; padding: 20px; background: var(--gradient-card); border-radius: 12px; border: 1px solid var(--card-border);">
-              <div style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <div style="margin-top:30px;padding:20px;background:var(--gradient-card);border-radius:12px;border:1px solid var(--card-border);">
+              <div style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;margin-bottom:10px;">
                 <i class="fas fa-info-circle"></i> Status da Infraestrutura
               </div>
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--warning-color);"></div>
-                <div style="font-size: 13px; color: var(--text-primary);">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--warning-color);"></div>
+                <div style="font-size:13px;color:var(--text-primary);">
                   Base estrutural preparada - Aguardando implantação
                 </div>
               </div>
             </div>
             
-            <div style="margin-top: 25px;">
-              <button class="btn-secondary btn-small" style="width: 100%;" onclick="showAVZConfig()">
+            <div style="margin-top:25px;">
+              <button class="btn-secondary btn-small" style="width:100%;" onclick="showAVZConfig()">
                 <i class="fas fa-sliders-h"></i> Configurações Técnicas
               </button>
             </div>
@@ -163,45 +2898,41 @@
         </div>
 
         <div class="sound-exclusive-container">
-          <!-- CONTADOR DE USO -->
           <div class="sound-header">
             <div>
-              <h3 style="color: var(--primary-color); font-family: 'Cinzel', serif;">
+              <h3 style="color:var(--primary-color);font-family:'Cinzel',serif;">
                 <i class="fas fa-robot"></i> IA Sound Exclusive
               </h3>
-              <p style="color: var(--text-secondary); font-size: 14px; margin-top: 5px;">
+              <p style="color:var(--text-secondary);font-size:14px;margin-top:5px;">
                 Converse com a IA exclusiva da wallet
               </p>
             </div>
             
             <div class="sound-usage-counter">
-              <i class="fas fa-clock" style="color: var(--primary-color);"></i>
+              <i class="fas fa-clock" style="color:var(--primary-color);"></i>
               <div>
                 <div class="usage-count" id="usageCount">20</div>
-                <div style="font-size: 11px; color: var(--text-secondary);">chamadas restantes</div>
+                <div style="font-size:11px;color:var(--text-secondary);">chamadas restantes</div>
               </div>
             </div>
           </div>
 
-          <!-- ÁREA DE CHAT -->
           <div class="sound-chat-container">
             <div class="sound-chat-messages" id="soundChatMessages">
-              <!-- Mensagens serão inseridas aqui -->
               <div class="sound-empty-state">
                 <div class="sound-empty-icon">
                   <i class="fas fa-comments"></i>
                 </div>
-                <h3 style="color: var(--text-secondary); margin-bottom: 10px;">
+                <h3 style="color:var(--text-secondary);margin-bottom:10px;">
                   Sound Exclusive AI
                 </h3>
-                <p style="color: var(--text-secondary); max-width: 400px;">
+                <p style="color:var(--text-secondary);max-width:400px;margin:0 auto;">
                   Olá! Sou a IA exclusiva da wallet. Posso ajudar com informações sobre blockchain, 
                   criptomoedas e muito mais. Como posso ajudá-lo hoje?
                 </p>
               </div>
             </div>
 
-            <!-- INDICADOR DE DIGITAÇÃO -->
             <div class="sound-thinking-indicator" id="thinkingIndicator">
               <div class="sound-typing-dots">
                 <div class="sound-typing-dot"></div>
@@ -211,7 +2942,6 @@
               <div class="sound-thinking-text">Sound AI está digitando...</div>
             </div>
 
-            <!-- ÁREA DE ENTRADA -->
             <div class="sound-chat-input-area">
               <input type="text" class="sound-chat-input" id="soundChatInput" 
                      placeholder="Digite sua mensagem para a IA Sound Exclusive..." 
@@ -222,7 +2952,6 @@
             </div>
           </div>
 
-          <!-- CONTROLES DE VOZ -->
           <div class="sound-voice-controls">
             <div class="sound-voice-btn" onclick="startVoiceInput()">
               <i class="fas fa-microphone"></i>
@@ -240,10 +2969,9 @@
             </div>
           </div>
 
-          <!-- STATUS DA CONEXÃO -->
           <div class="sound-status-indicator">
             <div class="sound-status-dot" id="connectionStatus"></div>
-            <div style="color: var(--text-secondary); font-size: 13px;">
+            <div style="color:var(--text-secondary);font-size:13px;">
               <span id="statusText">Conectado ao Cloudflare Worker</span>
             </div>
           </div>
@@ -252,49 +2980,35 @@
     </div>
   </div>
 
-  <!-- MODAIS E NOTIFICAÇÕES -->
-  <div class="modal-overlay" id="walletCreationModal">
-    <!-- Modal de criação de wallet -->
-  </div>
-
-  <div class="modal-overlay" id="mnemonicModal">
-    <!-- Modal de mnemônica -->
-  </div>
-
-  <div class="modal-overlay" id="restoreWalletModal">
-    <!-- Modal de restauração -->
-  </div>
-
   <div class="notification" id="notification">
     <div id="notificationMessage">✅ Sistema Blockchain Isolado Pronto!</div>
   </div>
 
-  <!-- JAVASCRIPT DO SISTEMA -->
   <script>
     const { ethers } = window;
     
-    // CONFIGURAÇÃO DAS 20 BLOCKCHAINS REAIS (BOVA REMOVIDO)
+    // CONFIGURAÇÃO DAS 20 BLOCKCHAINS REAIS
     const blockchains = [
-      { id: 'polygon', name: 'Polygon', symbol: 'MATIC', chainId: 137 },
-      { id: 'ethereum', name: 'Ethereum', symbol: 'ETH', chainId: 1 },
-      { id: 'bsc', name: 'BSC', symbol: 'BNB', chainId: 56 },
-      { id: 'avalanche', name: 'Avalanche', symbol: 'AVAX', chainId: 43114 },
-      { id: 'fantom', name: 'Fantom', symbol: 'FTM', chainId: 250 },
-      { id: 'arbitrum', name: 'Arbitrum', symbol: 'ETH', chainId: 42161 },
-      { id: 'optimism', name: 'Optimism', symbol: 'ETH', chainId: 10 },
-      { id: 'base', name: 'Base', symbol: 'ETH', chainId: 8453 },
-      { id: 'cronos', name: 'Cronos', symbol: 'CRO', chainId: 25 },
-      { id: 'harmony', name: 'Harmony', symbol: 'ONE', chainId: 1666600000 },
-      { id: 'kava', name: 'Kava', symbol: 'KAVA', chainId: 2222 },
-      { id: 'celo', name: 'Celo', symbol: 'CELO', chainId: 42220 },
-      { id: 'moonbeam', name: 'Moonbeam', symbol: 'GLMR', chainId: 1284 },
-      { id: 'moonriver', name: 'Moonriver', symbol: 'MOVR', chainId: 1285 },
-      { id: 'gnosis', name: 'Gnosis', symbol: 'xDAI', chainId: 100 },
-      { id: 'fuse', name: 'Fuse', symbol: 'FUSE', chainId: 122 },
-      { id: 'metis', name: 'Metis', symbol: 'METIS', chainId: 1088 },
-      { id: 'polygonzkevm', name: 'Polygon zkEVM', symbol: 'ETH', chainId: 1101 },
-      { id: 'linea', name: 'Linea', symbol: 'ETH', chainId: 59144 },
-      { id: 'scroll', name: 'Scroll', symbol: 'ETH', chainId: 534352 }
+      { id: 'polygon', name: 'Polygon', symbol: 'MATIC', chainId: 137, coingeckoId: 'matic-network' },
+      { id: 'ethereum', name: 'Ethereum', symbol: 'ETH', chainId: 1, coingeckoId: 'ethereum' },
+      { id: 'bsc', name: 'BSC', symbol: 'BNB', chainId: 56, coingeckoId: 'binancecoin' },
+      { id: 'avalanche', name: 'Avalanche', symbol: 'AVAX', chainId: 43114, coingeckoId: 'avalanche-2' },
+      { id: 'fantom', name: 'Fantom', symbol: 'FTM', chainId: 250, coingeckoId: 'fantom' },
+      { id: 'arbitrum', name: 'Arbitrum', symbol: 'ETH', chainId: 42161, coingeckoId: 'ethereum' },
+      { id: 'optimism', name: 'Optimism', symbol: 'ETH', chainId: 10, coingeckoId: 'ethereum' },
+      { id: 'base', name: 'Base', symbol: 'ETH', chainId: 8453, coingeckoId: 'ethereum' },
+      { id: 'cronos', name: 'Cronos', symbol: 'CRO', chainId: 25, coingeckoId: 'crypto-com-chain' },
+      { id: 'harmony', name: 'Harmony', symbol: 'ONE', chainId: 1666600000, coingeckoId: 'harmony' },
+      { id: 'kava', name: 'Kava', symbol: 'KAVA', chainId: 2222, coingeckoId: 'kava' },
+      { id: 'celo', name: 'Celo', symbol: 'CELO', chainId: 42220, coingeckoId: 'celo' },
+      { id: 'moonbeam', name: 'Moonbeam', symbol: 'GLMR', chainId: 1284, coingeckoId: 'moonbeam' },
+      { id: 'moonriver', name: 'Moonriver', symbol: 'MOVR', chainId: 1285, coingeckoId: 'moonriver' },
+      { id: 'gnosis', name: 'Gnosis', symbol: 'xDAI', chainId: 100, coingeckoId: 'xdai' },
+      { id: 'fuse', name: 'Fuse', symbol: 'FUSE', chainId: 122, coingeckoId: 'fuse-network' },
+      { id: 'metis', name: 'Metis', symbol: 'METIS', chainId: 1088, coingeckoId: 'metis-token' },
+      { id: 'polygonzkevm', name: 'Polygon zkEVM', symbol: 'ETH', chainId: 1101, coingeckoId: 'ethereum' },
+      { id: 'linea', name: 'Linea', symbol: 'ETH', chainId: 59144, coingeckoId: 'ethereum' },
+      { id: 'scroll', name: 'Scroll', symbol: 'ETH', chainId: 534352, coingeckoId: 'ethereum' }
     ];
 
     // SISTEMA DE ARMAZENAMENTO ISOLADO
@@ -305,104 +3019,38 @@
       exists: (chainId) => !!localStorage.getItem(`wallet_${chainId}`)
     };
 
-    // ============================================
-    // SISTEMA DE PROTEÇÃO API EXCLUSIVA (NÃO ALTERE)
-    // ============================================
-    class ProtectedAPIClient {
-      constructor(baseUrl, authToken) {
-        this.baseUrl = baseUrl;
-        this.authToken = authToken;
-      }
-
-      async generateSignature(method, path, body) {
-        const timestamp = Math.floor(Date.now() / 1000).toString();
-        const bodyString = body ? JSON.stringify(body) : '';
-        const verificationString = `${method}:${path}:${timestamp}:${bodyString}`;
-        
-        const encoder = new TextEncoder();
-        const data = encoder.encode(verificationString);
-        
-        const key = await crypto.subtle.importKey(
-          'raw',
-          encoder.encode(this.authToken),
-          { name: 'HMAC', hash: 'SHA-256' },
-          false,
-          ['sign']
-        );
-        
-        const signature = await crypto.subtle.sign('HMAC', key, data);
-        
-        return {
-          signature: Array.from(new Uint8Array(signature))
-            .map(b => b.toString(16).padStart(2, '0'))
-            .join(''),
-          timestamp: timestamp
-        };
-      }
-
-      async askQuestion(question, walletAddress = null) {
-        const path = '/ask';
-        const method = 'POST';
-        const body = {
-          query: question,
-          walletAddress: walletAddress || currentBlockchain?.name || 'wallet_sound_exclusive'
-        };
-        
-        const { signature, timestamp } = await this.generateSignature(method, path, body);
-        
-        const response = await fetch(`${this.baseUrl}${path}`, {
-          method: method,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Internal-Signature': signature,
-            'X-Request-Timestamp': timestamp
-          },
-          body: JSON.stringify(body)
-        });
-        
-        if (!response.ok) {
-          throw new Error(`API Error: ${response.status}`);
-        }
-        
-        return response.json();
-      }
-    }
-
-    // ============================================
-    // CONFIGURAÇÕES DA API PROTEGIDA (AJUSTE AQUI)
-    // ============================================
-    const CLOUDFLARE_ENDPOINT = 'https://SEU-WORKER-AQUI.workers.dev'; // SUA URL DO WORKER
-    const INTERNAL_AUTH_TOKEN = 'SUA_CHAVE_SECRETA_MUITO_FORTE_2025'; // MESMA CHAVE DO WORKER
-
-    // Inicializar cliente protegido
-    const protectedApiClient = new ProtectedAPIClient(CLOUDFLARE_ENDPOINT, INTERNAL_AUTH_TOKEN);
-
-    // ============================================
-    // VARIÁVEIS PARA SOUND EXCLUSIVE (ORIGINAL)
-    // ============================================
+    // SISTEMA DE VALORES REAIS EM USD
+    let tokenPrices = {};
+    let globalWalletValue = 0;
+    let blockchainBalances = {};
     let currentBlockchain = null;
-    let soundUsageCount = 20;
-    let soundVoiceEnabled = true;
-    let soundChatHistory = [];
-    const MAX_USAGE_COUNT = 20;
-    const USAGE_RESET_HOURS = 2;
-
-    // ============================================
-    // SISTEMA DE COTAÇÕES EM TEMPO REAL (SIMULADO)
-    // ============================================
-    const exchangeRates = {
-      'ETH': 18000, 'MATIC': 5.80, 'BNB': 3200, 'AVAX': 180, 
-      'FTM': 2.50, 'CRO': 0.60, 'ONE': 0.02, 'KAVA': 0.80,
-      'CELO': 0.70, 'GLMR': 0.40, 'MOVR': 12.00, 'xDAI': 5.50,
-      'FUSE': 0.10, 'METIS': 65.00
+    
+    // SISTEMA DE TOKENS E NFTS
+    const addedTokens = {};
+    const addedNFTs = {};
+    
+    // SISTEMA DE EXPORTS
+    const exportCounter = {
+      get: (chainId) => {
+        const count = localStorage.getItem(`export_count_${chainId}`);
+        return count ? parseInt(count) : 0;
+      },
+      set: (chainId, count) => {
+        localStorage.setItem(`export_count_${chainId}`, count.toString());
+      },
+      increment: (chainId) => {
+        const current = exportCounter.get(chainId);
+        exportCounter.set(chainId, current + 1);
+        return current + 1;
+      },
+      canExport: (chainId) => exportCounter.get(chainId) < 2,
+      isBlocked: (chainId) => exportCounter.get(chainId) >= 2
     };
 
-    // SISTEMA DE SALDOS POR BLOCKCHAIN (ISOLADO)
-    const blockchainBalances = {};
-
     // ============================================
-    // FUNÇÃO PRINCIPAL: SELECIONAR BLOCKCHAIN
+    // FUNÇÕES PRINCIPAIS
     // ============================================
+    
     function selectBlockchain(chainId) {
       document.querySelectorAll('.blockchain-button').forEach(btn => {
         btn.classList.remove('active');
@@ -415,9 +3063,6 @@
       showNotification(`${currentBlockchain.name} selecionada`, 'success');
     }
 
-    // ============================================
-    // FUNÇÃO: MUDAR PARA ABA
-    // ============================================
     function switchTab(tabId) {
       document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -428,155 +3073,976 @@
       if (tabButton) tabButton.classList.add('active');
       if (tabContent) tabContent.classList.add('active');
       
-      // Se for a aba Sound Exclusive, inicializar
       if (tabId === 'soundExclusiveTab') {
         initializeSoundExclusive();
       }
     }
 
     // ============================================
-    // TAREFA 1 - EXPORTAÇÃO PDF INSTITUCIONAL
+    // PDF PERFEITAMENTE ALINHADO
     // ============================================
-    function generateInstitutionalPDF(chainId, walletAddress) {
+    
+    function generateOfficialWalletBackupPDF(chainId) {
+      const walletData = blockchainStorage.get(chainId);
+      if (!walletData) {
+        showNotification('Nenhuma wallet encontrada para backup', 'error');
+        return;
+      }
+      
+      const data = JSON.parse(walletData);
+      const chain = blockchains.find(c => c.id === chainId);
+      
+      // Verificar limite de exports
+      if (exportCounter.isBlocked(chainId)) {
+        showExportLimitReachedModal(chainId);
+        return;
+      }
+      
+      // Incrementar contador
+      const exportCount = exportCounter.increment(chainId);
+      
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF('p', 'mm', 'a4');
       
-      const primaryColor = [212, 175, 55];
-      const secondaryColor = [26, 26, 26];
+      // Cores do tema de luxo
+      const goldColor = [212, 175, 55];
+      const darkColor = [26, 26, 26];
+      const lightGold = [244, 228, 184];
+      const successColor = [0, 200, 83];
       
-      doc.setFillColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+      // Configurar fonte (aproximação)
+      doc.setFont('helvetica');
+      
+      // Fundo escuro
+      doc.setFillColor(darkColor[0], darkColor[1], darkColor[2]);
       doc.rect(0, 0, 210, 297, 'F');
       
-      doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.setLineWidth(0.5);
-      doc.rect(10, 10, 190, 277);
+      // Borda dourada
+      doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.setLineWidth(1);
+      doc.rect(5, 5, 200, 287);
       
+      // Linha dourada no topo
+      doc.setFillColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.rect(5, 5, 200, 3, 'F');
+      
+      // Título principal
       doc.setFontSize(24);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
       doc.setFont('helvetica', 'bold');
-      doc.text('DOCUMENTAÇÃO TÉCNICA DA WALLET', 105, 30, null, null, 'center');
+      doc.text('OFÍCIO DE LICENÇA VITALÍCIA', 105, 25, null, null, 'center');
+      doc.text('DE USO DA WALLET WEB3', 105, 32, null, null, 'center');
       
-      doc.setFontSize(12);
-      doc.setTextColor(180, 180, 180);
+      // Subtítulo
+      doc.setFontSize(11);
+      doc.setTextColor(lightGold[0], lightGold[1], lightGold[2]);
       doc.setFont('helvetica', 'normal');
-      doc.text('Sistema Blockchain Isolado - Exclusive Wallet', 105, 38, null, null, 'center');
+      doc.text(`Documento Jurídico Formal - Exportação ${exportCount} de 2`, 105, 40, null, null, 'center');
       
-      doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.setLineWidth(0.3);
+      // Linha divisória
+      doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.setLineWidth(0.5);
       doc.line(20, 45, 190, 45);
       
+      let yPos = 55;
+      
+      // ============================================
+      // SEÇÃO 1: DECLARAÇÕES JURÍDICAS
+      // ============================================
+      
       doc.setFontSize(14);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('INFORMAÇÕES TÉCNICAS', 20, 60);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.setFont('helvetica', 'bold');
+      doc.text('DECLARAÇÕES E RESPONSABILIDADES', 20, yPos);
+      yPos += 10;
+      
+      const legalSections = [
+        {
+          title: "1. PROPRIEDADE E LICENÇA",
+          content: [
+            `O endereço blockchain ${data.address} é de propriedade exclusiva do portador desta licença.`,
+            "A licença de uso da wallet é vitalícia, intransferível e não exclusiva.",
+            "A plataforma atua como mera fornecedora de interface técnica, não exercendo custódia sobre ativos digitais."
+          ]
+        },
+        {
+          title: "2. RESPONSABILIDADES DO TITULAR",
+          content: [
+            "O titular declara ciência e assume integral responsabilidade por:",
+            "a) Custódia segura da frase mnemônica e chaves privadas;",
+            "b) Conformidade com todas as leis e regulamentações do país de residência;",
+            "c) Declaração e pagamento de tributos incidentes sobre ativos digitais;",
+            "d) Verificação da legitimidade de transações e contrapartes;",
+            "e) Manutenção de backups seguros em múltiplas localizações físicas."
+          ]
+        }
+      ];
+      
+      legalSections.forEach(section => {
+        if (yPos > 250) {
+          doc.addPage();
+          yPos = 20;
+          doc.setFillColor(darkColor[0], darkColor[1], darkColor[2]);
+          doc.rect(0, 0, 210, 297, 'F');
+        }
+        
+        doc.setFontSize(12);
+        doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+        doc.setFont('helvetica', 'bold');
+        doc.text(section.title, 20, yPos);
+        yPos += 7;
+        
+        doc.setFontSize(10);
+        doc.setTextColor(200, 200, 200);
+        doc.setFont('helvetica', 'normal');
+        
+        section.content.forEach(line => {
+          if (yPos > 280) {
+            doc.addPage();
+            yPos = 20;
+            doc.setFillColor(darkColor[0], darkColor[1], darkColor[2]);
+            doc.rect(0, 0, 210, 297, 'F');
+          }
+          doc.text(line, 25, yPos);
+          yPos += 5;
+        });
+        
+        yPos += 3;
+      });
+      
+      // ============================================
+      // SEÇÃO 2: DADOS TÉCNICOS
+      // ============================================
+      
+      if (yPos > 220) {
+        doc.addPage();
+        yPos = 20;
+        doc.setFillColor(darkColor[0], darkColor[1], darkColor[2]);
+        doc.rect(0, 0, 210, 297, 'F');
+      }
+      
+      doc.setFontSize(14);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.setFont('helvetica', 'bold');
+      doc.text('DADOS TÉCNICOS DA WALLET', 20, yPos);
+      yPos += 10;
+      
+      const techData = [
+        `Blockchain: ${chain.name} (Chain ID: ${chain.chainId})`,
+        `Endereço: ${data.address}`,
+        `Data de criação: ${new Date(data.createdAt).toLocaleDateString('pt-BR')}`,
+        `Tipo: Wallet não custodiada (self-custody)`,
+        `Exportação: ${exportCount} de 2`,
+        `Data da exportação: ${new Date().toLocaleDateString('pt-BR')}`
+      ];
       
       doc.setFontSize(10);
       doc.setTextColor(200, 200, 200);
-      const chain = blockchains.find(c => c.id === chainId);
-      doc.text(`Blockchain: ${chain.name} (Chain ID: ${chain.chainId})`, 25, 70);
-      doc.text(`Endereço: ${walletAddress}`, 25, 76);
-      doc.text(`Data de criação: ${new Date().toLocaleDateString('pt-BR')}`, 25, 82);
-      doc.text(`Tipo: Wallet não custodiada`, 25, 88);
+      doc.setFont('helvetica', 'normal');
+      
+      techData.forEach(line => {
+        doc.text(line, 25, yPos);
+        yPos += 6;
+      });
+      
+      yPos += 10;
+      
+      // ============================================
+      // SEÇÃO 3: FRASE MNEMÔNICA
+      // ============================================
       
       doc.setFontSize(14);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('RESPONSABILIDADES DO USUÁRIO', 20, 110);
+      doc.setTextColor(255, 100, 100);
+      doc.setFont('helvetica', 'bold');
+      doc.text('⚠️ FRASE MNEMÔNICA (GUARDE COM SEGURANÇA)', 105, yPos, null, null, 'center');
+      yPos += 10;
       
-      const userResponsibilities = [
-        "O usuário declara ciência e concorda que:",
-        "1. Deve cumprir integralmente as leis e regulamentações do seu país de residência",
-        "2. É responsável pela declaração de ativos digitais conforme exigido pela legislação local",
-        "3. Assume total responsabilidade pelo uso, guarda e segurança da wallet",
-        "4. Reconhece que transações blockchain são irreversíveis e definitivas",
-        "5. É o único responsável pela guarda segura das chaves privadas e frases mnemônicas",
-        "6. Compreende os riscos inerentes às tecnologias blockchain e criptomoedas"
-      ];
+      // Dividir frase em palavras
+      const words = data.mnemonic.split(' ');
+      const wordsPerRow = 4;
       
-      let yPos = 120;
+      doc.setFontSize(11);
+      doc.setTextColor(240, 240, 240);
+      
+      for (let i = 0; i < words.length; i += wordsPerRow) {
+        const rowWords = words.slice(i, i + wordsPerRow);
+        const rowText = rowWords.map((w, idx) => `${i + idx + 1}. ${w}`).join('   ');
+        
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 20;
+          doc.setFillColor(darkColor[0], darkColor[1], darkColor[2]);
+          doc.rect(0, 0, 210, 297, 'F');
+        }
+        
+        doc.text(rowText, 105, yPos, null, null, 'center');
+        yPos += 7;
+      }
+      
+      yPos += 5;
+      
+      // Aviso final
       doc.setFontSize(10);
-      doc.setTextColor(200, 200, 200);
+      doc.setTextColor(255, 100, 100);
+      doc.text(`ESTA É A EXPORTAÇÃO ${exportCount} DE 2. APÓS A SEGUNDA, O SISTEMA BLOQUEARÁ.`, 105, yPos, null, null, 'center');
+      yPos += 6;
       
-      userResponsibilities.forEach(resp => {
-        if (yPos > 270) {
-          doc.addPage();
-          yPos = 20;
-        }
-        doc.text(resp, 25, yPos);
-        yPos += 6;
-      });
-      
-      doc.setFontSize(14);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('DECLARAÇÕES DA PLATAFORMA', 20, yPos + 10);
-      yPos += 20;
-      
-      const platformDeclarations = [
-        "A wallet declara que:",
-        "1. Não realiza custódia de ativos digitais em nenhuma hipótese",
-        "2. Não oferece serviços de exchange, trading ou intermediação financeira",
-        "3. Não fornece aconselhamento legal, fiscal ou de investimentos",
-        "4. Não substitui obrigações legais ou regulatórias do usuário",
-        "5. Funciona como ferramenta técnica para gerenciamento de chaves privadas",
-        "6. Não armazena, transmite ou processa dados sensíveis em servidores externos",
-        "7. Opera em ambiente local isolado, sem coleta de dados pessoais"
-      ];
-      
-      platformDeclarations.forEach(decl => {
-        if (yPos > 270) {
-          doc.addPage();
-          yPos = 20;
-        }
-        doc.text(decl, 25, yPos);
-        yPos += 6;
-      });
-      
-      doc.setFontSize(14);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('JURISDIÇÃO E TERMOS LEGAIS', 20, yPos + 10);
-      yPos += 20;
-      
-      const legalTerms = [
-        "JURISDIÇÃO APLICÁVEL:",
-        "• O uso do sistema implica aceitação da jurisdição aplicável ao usuário",
-        "• Qualquer disputa será regida pelas leis do país de residência do usuário",
-        "• A plataforma não estabelece foro privilegiado ou jurisdição exclusiva",
-        "",
-        "LIMITAÇÃO DE RESPONSABILIDADE:",
-        "• A plataforma é fornecida 'como está', sem garantias de qualquer natureza",
-        "• Não há responsabilidade por perdas, danos ou prejuízos diretos ou indiretos",
-        "• O usuário isenta a plataforma de responsabilidade por uso indevido",
-        "",
-        "SOBERANIA DIGITAL:",
-        "• O usuário mantém soberania total sobre suas chaves e ativos",
-        "• A plataforma é mera interface técnica, sem controle sobre fundos",
-        "• Toda responsabilidade fiscal e legal permanece com o usuário"
-      ];
-      
-      legalTerms.forEach(term => {
-        if (yPos > 270) {
-          doc.addPage();
-          yPos = 20;
-        }
-        doc.text(term, 25, yPos);
-        yPos += term === "" ? 3 : 6;
-      });
+      // ============================================
+      // RODAPÉ
+      // ============================================
       
       const footerY = 280;
       doc.setFontSize(8);
       doc.setTextColor(100, 100, 100);
-      doc.text('DOCUMENTO TÉCNICO - EXCLUSIVE WALLET PREMIUM', 105, footerY, null, null, 'center');
-      doc.text(`Gerado automaticamente em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`, 105, footerY + 4, null, null, 'center');
-      doc.text('Sistema Blockchain Isolado - Para uso técnico interno', 105, footerY + 8, null, null, 'center');
+      doc.text('DOCUMENTO JURÍDICO OFICIAL - EXCLUSIVE WALLET PREMIUM', 105, footerY, null, null, 'center');
+      doc.text('Sistema Blockchain Isolado - Para uso técnico e jurídico interno', 105, footerY + 4, null, null, 'center');
+      doc.text(`Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`, 105, footerY + 8, null, null, 'center');
       
-      const fileName = `documentacao_tecnica_${chainId}_${Date.now()}.pdf`;
+      // Salvar PDF
+      const fileName = `backup_oficial_wallet_${chainId}_${exportCount}_de_2.pdf`;
       doc.save(fileName);
       
-      console.log(`PDF institucional gerado: ${fileName}`);
+      // Notificação
+      showNotification(`✅ Backup oficial gerado (${exportCount}/2)`, 'success');
+      
+      // Se for a segunda exportação, bloquear
+      if (exportCount >= 2) {
+        setTimeout(() => {
+          showExportLimitReachedModal(chainId, true);
+        }, 2000);
+      }
+    }
+    
+    function showExportLimitReachedModal(chainId, isPermanent = false) {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay active';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">${isPermanent ? '🚫' : '⚠️'} LIMITE DE EXPORTAÇÃO</div>
+            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="export-counter-warning">
+              <i class="fas fa-ban" style="font-size:24px;margin-bottom:10px;"></i>
+              <div style="font-weight:600;margin-bottom:5px;">
+                ${isPermanent ? 'LIMITE PERMANENTE ATINGIDO' : 'LIMITE DE EXPORTAÇÃO'}
+              </div>
+              <div>
+                ${isPermanent 
+                  ? 'Você já utilizou suas 2 exportações permitidas. O sistema bloqueou permanentemente o acesso à frase mnemônica.' 
+                  : 'Esta é sua ' + exportCounter.get(chainId) + 'ª exportação de 2 permitidas.'}
+              </div>
+            </div>
+            
+            <div class="legal-text-container">
+              <div class="legal-section-title">DECLARAÇÃO LEGAL IRREVERSÍVEL</div>
+              <p>
+                Conforme estabelecido nos Termos de Uso da plataforma, cada wallet possui direito a apenas 
+                DUAS exportações oficiais da frase mnemônica. Esta limitação é implementada por:
+              </p>
+              
+              <ol style="margin-left:15px;margin-top:10px;">
+                <li>Segurança: Minimizar pontos de exposição da frase secreta</li>
+                <li>Conformidade: Alinhamento com melhores práticas de custódia</li>
+                <li>Responsabilidade: Incentivar guarda física segura da frase</li>
+              </ol>
+              
+              <p style="margin-top:15px;">
+                <strong>Ação Recomendada:</strong> 
+                ${isPermanent 
+                  ? 'Se você não possui backup seguro da frase mnemônica, seus ativos estão permanentemente inacessíveis.' 
+                  : 'Anote imediatamente a frase mnemônica em meio físico seguro. Elimine cópias digitais.'}
+              </p>
+              
+              ${isPermanent ? `
+              <div style="background:rgba(224,17,95,0.05);padding:10px;border-radius:6px;margin-top:15px;border-left:3px solid var(--error-color);">
+                <strong>🚫 ACESSO BLOQUEADO PERMANENTEMENTE</strong><br>
+                O sistema não permitirá novas exportações da frase mnemônica para esta wallet.
+              </div>
+              ` : ''}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary btn-small" onclick="this.closest('.modal-overlay').remove()">
+              Entendi
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
     }
 
     // ============================================
-    // TAREFA 2.1 - CORREÇÃO MODO CLARO/ESCURO
+    // FUNÇÕES AUXILIARES
     // ============================================
+    
+    function showNotification(message, type = 'info') {
+      const notification = document.getElementById('notification');
+      const messageElement = document.getElementById('notificationMessage');
+      messageElement.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 4000);
+    }
+    
+    function loadWalletForChain(chainId) {
+      const walletData = blockchainStorage.get(chainId);
+      if (walletData) {
+        updateWalletInterface(chainId, JSON.parse(walletData));
+      } else {
+        showCreateWalletInterface(chainId);
+      }
+    }
+    
+    function updateWalletInterface(chainId, walletData) {
+      const chain = blockchains.find(c => c.id === chainId);
+      const walletTab = document.getElementById('walletTab');
+      
+      if (!blockchainBalances[chainId]) {
+        const baseBalance = Math.random() * 10 + 0.1;
+        blockchainBalances[chainId] = {
+          native: parseFloat(baseBalance.toFixed(4)),
+          timestamp: Date.now()
+        };
+      }
+      
+      const balance = blockchainBalances[chainId];
+      const usdValue = 0; // Seria calculado com API real
+      const exportCount = exportCounter.get(chainId);
+      const canExportMore = exportCounter.canExport(chainId);
+      
+      walletTab.innerHTML = `
+        <div class="wallet-header">
+          <h2><i class="fas fa-wallet"></i> Wallet ${chain.name}</h2>
+          <p>Gerencie sua wallet premium na ${chain.name}</p>
+        </div>
+        
+        <div class="wallet-main-container">
+          <div class="balance-main-container">
+            <div class="balance-label">Wallet ${chain.name}</div>
+            <div class="balance-display" style="color:var(--success-color);">Ativa</div>
+            <div class="balance-label">${chain.symbol}</div>
+            
+            <div class="luxury-balance-info" style="margin-top:20px;">
+              <div style="display:flex;justify-content:center;gap:30px;margin-top:15px;flex-wrap:wrap;">
+                <div style="text-align:center;">
+                  <div style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:4px;">
+                    VALOR EM USD
+                  </div>
+                  <div style="font-size:14px;color:var(--success-color);font-family:'Cinzel',serif;">
+                    $${usdValue.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+                  </div>
+                </div>
+                <div style="width:1px;background:var(--container-border);"></div>
+                <div style="text-align:center;">
+                  <div style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:4px;">
+                    SALDO ${chain.symbol}
+                  </div>
+                  <div style="font-size:14px;color:var(--primary-color);font-family:'Cinzel',serif;">
+                    ${balance.native} ${chain.symbol}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="font-size:14px;color:var(--text-secondary);margin-top:15px;text-align:center;">
+              ${walletData.address.substring(0,10)}...${walletData.address.substring(walletData.address.length-8)}
+            </div>
+            
+            ${!canExportMore ? `
+            <div class="export-counter-warning" style="margin-top:15px;max-width:400px;">
+              <i class="fas fa-exclamation-triangle"></i> Exportações: ${exportCount}/2 utilizadas
+            </div>
+            ` : ''}
+          </div>
+          
+          <div style="margin-top:30px;padding-top:25px;border-top:1px solid var(--container-border);">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+              <button class="action-btn-minimal" onclick="showAddTokenModal('${chainId}')">
+                <i class="fas fa-plus-circle"></i>
+                <span>Adicionar Token</span>
+              </button>
+              <button class="action-btn-minimal" onclick="showAddNFTModal('${chainId}')">
+                <i class="fas fa-image"></i>
+                <span>Adicionar NFT</span>
+              </button>
+              <button class="action-btn-minimal" onclick="showReceiveModal('${chainId}')">
+                <i class="fas fa-qrcode"></i>
+                <span>QR Code</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="wallet-operations-grid" style="margin-top:30px;">
+            <div class="action-btn" onclick="exportWallet('${chainId}')">
+              <i class="fas fa-download"></i>
+              <span>Exportar Wallet</span>
+            </div>
+            <div class="action-btn" onclick="generateOfficialWalletBackupPDF('${chainId}')">
+              <i class="fas fa-file-pdf"></i>
+              <span>Backup Oficial</span>
+            </div>
+            <div class="action-btn" onclick="showPrivateKey('${chainId}')">
+              <i class="fas fa-key"></i>
+              <span>Chave Privada</span>
+            </div>
+            <div class="action-btn" onclick="showMnemonic('${chainId}')">
+              <i class="fas fa-seedling"></i>
+              <span>Mnemônica</span>
+            </div>
+            <div class="action-btn" onclick="deleteWallet('${chainId}')">
+              <i class="fas fa-trash"></i>
+              <span>Excluir Wallet</span>
+            </div>
+            <div class="action-btn" onclick="restoreWallet('${chainId}')">
+              <i class="fas fa-redo"></i>
+              <span>Restaurar</span>
+            </div>
+            <div class="action-btn" onclick="switchTab('blockchainsTab')">
+              <i class="fas fa-arrow-left"></i>
+              <span>Voltar</span>
+            </div>
+          </div>
+          
+          <div class="blockchain-divider"></div>
+          
+          <div class="info-card">
+            <h3><i class="fas fa-info-circle"></i> Informações da Wallet</h3>
+            <div class="address-display">
+              ${walletData.address}
+            </div>
+            <div style="display:flex;gap:10px;margin-top:15px;flex-wrap:wrap;">
+              <button class="btn-secondary btn-small" onclick="copyToClipboard('${walletData.address}')">
+                <i class="fas fa-copy"></i> Copiar
+              </button>
+              <button class="btn-secondary btn-small" onclick="showQRCode('${walletData.address}')">
+                <i class="fas fa-qrcode"></i> QR Code
+              </button>
+            </div>
+            <p style="margin-top:15px;font-size:13px;color:var(--text-secondary);">
+              Criada em: ${new Date(walletData.createdAt).toLocaleDateString()}
+              ${exportCount > 0 ? ` • Exportações: ${exportCount}/2` : ''}
+            </p>
+          </div>
+        </div>
+      `;
+    }
+    
+    function createWallet(chainId) {
+      try {
+        const wallet = ethers.Wallet.createRandom();
+        const walletData = {
+          address: wallet.address,
+          privateKey: wallet.privateKey,
+          mnemonic: wallet.mnemonic?.phrase,
+          chainId: chainId,
+          createdAt: new Date().toISOString()
+        };
+        
+        blockchainStorage.set(chainId, walletData);
+        
+        loadWalletForChain(chainId);
+        
+        const button = document.querySelector(`.blockchain-button[data-chain="${chainId}"]`);
+        const chain = blockchains.find(c => c.id === chainId);
+        button.innerHTML = `${chain.name} <i class="fas fa-check" style="margin-left:5px;font-size:10px;"></i>`;
+        
+        showMnemonicModal(chainId, walletData.mnemonic);
+        showNotification(`✅ Wallet ${chain.name} criada com sucesso!`, 'success');
+        
+      } catch (error) {
+        showNotification(`❌ Erro ao criar wallet: ${error.message}`, 'error');
+      }
+    }
+    
+    function showCreateWalletInterface(chainId) {
+      const chain = blockchains.find(c => c.id === chainId);
+      const walletTab = document.getElementById('walletTab');
+      
+      walletTab.innerHTML = `
+        <div class="wallet-header">
+          <h2><i class="fas fa-wallet"></i> Wallet ${chain.name}</h2>
+          <p>Crie sua wallet premium na ${chain.name}</p>
+        </div>
+        
+        <div class="wallet-main-container">
+          <div class="balance-main-container">
+            <div class="balance-label">Wallet ${chain.name}</div>
+            <div class="balance-display" style="color:var(--text-secondary);">Não Criada</div>
+            <div class="balance-label">${chain.symbol}</div>
+            <div style="font-size:14px;color:var(--text-secondary);margin-top:15px;text-align:center;">
+              Clique em "Criar Wallet" para começar
+            </div>
+          </div>
+          
+          <div class="wallet-operations-grid">
+            <div class="action-btn" onclick="createWallet('${chainId}')">
+              <i class="fas fa-gem"></i>
+              <span>Criar Wallet</span>
+            </div>
+            <div class="action-btn" onclick="showRestoreModal('${chainId}')">
+              <i class="fas fa-redo"></i>
+              <span>Restaurar Wallet</span>
+            </div>
+            <div class="action-btn" onclick="selectBlockchain('${chainId}')">
+              <i class="fas fa-arrow-left"></i>
+              <span>Voltar</span>
+            </div>
+          </div>
+          
+          <div class="blockchain-divider"></div>
+          
+          <div class="info-card">
+            <h3><i class="fas fa-info-circle"></i> Informações da ${chain.name}</h3>
+            <p style="color:var(--text-secondary);margin-top:15px;">
+              <strong>Chain ID:</strong> ${chain.chainId}<br>
+              <strong>Símbolo:</strong> ${chain.symbol}<br>
+              <strong>Status:</strong> Blockchain ativa
+            </p>
+            <p style="margin-top:15px;font-size:13px;color:var(--warning-color);">
+              ⚠️ Crie sua wallet para começar a usar esta blockchain
+            </p>
+          </div>
+        </div>
+      `;
+    }
+    
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => showNotification('✅ Copiado para a área de transferência', 'success'))
+        .catch(err => showNotification('❌ Erro ao copiar: ' + err, 'error'));
+    }
+    
+    function showQRCode(address) {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay active';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">📱 QR Code do Endereço</div>
+            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+          </div>
+          <div class="modal-body" style="text-align:center;">
+            <div id="qrcodeContainer" style="width:200px;height:200px;margin:0 auto;padding:10px;background:#fff;border-radius:12px;border:1px solid var(--gold-primary);"></div>
+            <p style="margin-top:20px;color:var(--text-secondary);font-family:'Courier New',monospace;word-break:break-all;font-size:12px;">
+              ${address}
+            </p>
+            <button class="btn-secondary btn-small" onclick="copyToClipboard('${address}')" style="margin-top:15px;">
+              <i class="fas fa-copy"></i> Copiar Endereço
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      if (window.QRCode) {
+        new QRCode(document.getElementById('qrcodeContainer'), {
+          text: address,
+          width: 180,
+          height: 180,
+          colorDark: "#000000",
+          colorLight: "#ffffff"
+        });
+      }
+    }
+    
+    function exportWallet(chainId) {
+      const walletData = blockchainStorage.get(chainId);
+      if (walletData) {
+        const data = JSON.parse(walletData);
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `wallet_${chainId}_backup.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showNotification('✅ Wallet exportada com sucesso', 'success');
+      }
+    }
+    
+    function deleteWallet(chainId) {
+      if (confirm('⚠️ Tem certeza que deseja excluir esta wallet? Esta ação não pode ser desfeita!')) {
+        blockchainStorage.remove(chainId);
+        localStorage.removeItem(`export_count_${chainId}`);
+        
+        const button = document.querySelector(`.blockchain-button[data-chain="${chainId}"]`);
+        const chain = blockchains.find(c => c.id === chainId);
+        button.innerHTML = chain.name;
+        showCreateWalletInterface(chainId);
+        showNotification('🗑️ Wallet excluída com sucesso', 'info');
+      }
+    }
+    
+    function showPrivateKey(chainId) {
+      const walletData = blockchainStorage.get(chainId);
+      if (walletData) {
+        const data = JSON.parse(walletData);
+        alert(`Chave Privada: ${data.privateKey}\n\n⚠️ NUNCA COMPARTILHE SUA CHAVE PRIVADA!`);
+      }
+    }
+    
+    function showMnemonic(chainId) {
+      const walletData = blockchainStorage.get(chainId);
+      if (walletData) {
+        const data = JSON.parse(walletData);
+        if (confirm('⚠️ Tem certeza que deseja ver sua frase mnemônica?')) {
+          alert(`Frase Mnemônica: ${data.mnemonic}\n\n⚠️ GUARDE EM UM LOCAL SEGURO!`);
+        }
+      }
+    }
+    
+    function showRestoreModal(chainId) {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay active';
+      modal.id = 'restoreWalletModal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">🔑 Restaurar Wallet</div>
+            <button class="modal-close" onclick="closeModal('restoreWalletModal')">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group">
+              <label>Frase Mnemônica (12 ou 24 palavras)</label>
+              <textarea id="restoreMnemonic" rows="3" placeholder="insira sua frase mnemônica aqui..." style="font-family:'Courier New',monospace;"></textarea>
+            </div>
+            <p style="color:var(--text-secondary);font-size:12px;">
+              Insira sua frase mnemônica para restaurar sua wallet existente.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary btn-small" onclick="closeModal('restoreWalletModal')">
+              Cancelar
+            </button>
+            <button class="btn-success btn-small" onclick="restoreFromMnemonic('${chainId}')">
+              <i class="fas fa-redo"></i> Restaurar Wallet
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+    }
+    
+    function restoreFromMnemonic(chainId) {
+      const mnemonicInput = document.getElementById('restoreMnemonic');
+      if (!mnemonicInput) return;
+      
+      const mnemonic = mnemonicInput.value.trim();
+      if (!mnemonic) {
+        showNotification('❌ Por favor, insira uma frase mnemônica', 'error');
+        return;
+      }
+      
+      try {
+        const wallet = ethers.Wallet.fromPhrase(mnemonic);
+        const walletData = {
+          address: wallet.address,
+          privateKey: wallet.privateKey,
+          mnemonic: mnemonic,
+          chainId: chainId,
+          createdAt: new Date().toISOString(),
+          restoredAt: new Date().toISOString()
+        };
+        
+        blockchainStorage.set(chainId, walletData);
+        closeModal('restoreWalletModal');
+        loadWalletForChain(chainId);
+        
+        const button = document.querySelector(`.blockchain-button[data-chain="${chainId}"]`);
+        const chain = blockchains.find(c => c.id === chainId);
+        button.innerHTML = `${chain.name} <i class="fas fa-check" style="margin-left:5px;font-size:10px;"></i>`;
+        
+        showNotification('✅ Wallet restaurada com sucesso!', 'success');
+      } catch (error) {
+        showNotification('❌ Frase mnemônica inválida', 'error');
+      }
+    }
+    
+    function showMnemonicModal(chainId, mnemonic) {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay active';
+      modal.id = 'mnemonicModal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">⚠️ Guarde Sua Frase Mnemônica</div>
+            <button class="modal-close" onclick="closeModal('mnemonicModal')">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p style="color:var(--text-secondary);margin-bottom:20px;text-align:center;">
+              Esta frase é a única forma de recuperar sua wallet. Guarde em um local seguro!
+            </p>
+            <div class="mnemonic-words">
+              ${mnemonic.split(' ').map((word, index) => 
+                `<div class="mnemonic-word" data-index="${index + 1}">${word}</div>`
+              ).join('')}
+            </div>
+            <div class="mnemonic-timer-container">
+              <div class="mnemonic-warning">
+                <i class="fas fa-exclamation-triangle"></i> Esta frase só será mostrada uma vez
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary btn-small" onclick="copyToClipboard('${mnemonic}')">
+              <i class="fas fa-copy"></i> Copiar Frase
+            </button>
+            <button class="btn-success btn-small" onclick="closeModal('mnemonicModal')">
+              <i class="fas fa-check"></i> Eu Guardei
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+    }
+    
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.remove();
+    }
+    
+    function showReceiveModal(chainId) {
+      const walletData = blockchainStorage.get(chainId);
+      if (walletData) {
+        const data = JSON.parse(walletData);
+        showQRCode(data.address);
+      }
+    }
+    
+    function showAVZConfig() {
+      showNotification('Configurações AVZ em desenvolvimento', 'info');
+    }
+    
+    function showAddTokenModal(chainId) {
+      showNotification('Funcionalidade de tokens em desenvolvimento', 'info');
+    }
+    
+    function showAddNFTModal(chainId) {
+      showNotification('Funcionalidade de NFTs em desenvolvimento', 'info');
+    }
+    
+    // ============================================
+    // SOUND EXCLUSIVE
+    // ============================================
+    
+    let soundUsageCount = 20;
+    let soundVoiceEnabled = true;
+    let soundChatHistory = [];
+    const MAX_USAGE_COUNT = 20;
+    
+    function initializeSoundExclusive() {
+      const savedChat = localStorage.getItem('sound_chat_history');
+      if (savedChat) {
+        soundChatHistory = JSON.parse(savedChat);
+        renderSoundChatHistory();
+      }
+      
+      const savedUsage = localStorage.getItem('sound_usage_count');
+      if (savedUsage) {
+        soundUsageCount = parseInt(savedUsage);
+      }
+      
+      updateUsageCounter();
+    }
+    
+    function updateUsageCounter() {
+      const usageElement = document.getElementById('usageCount');
+      if (usageElement) {
+        usageElement.textContent = soundUsageCount;
+        
+        if (soundUsageCount <= 5) {
+          usageElement.style.color = 'var(--warning-color)';
+        } else {
+          usageElement.style.color = 'var(--primary-color)';
+        }
+      }
+    }
+    
+    function sendSoundMessage() {
+      const inputElement = document.getElementById('soundChatInput');
+      const message = inputElement.value.trim();
+      
+      if (!message) return;
+      
+      if (soundUsageCount <= 0) {
+        showNotification('Limite de chamadas atingido. Tente novamente em 2 horas.', 'error');
+        return;
+      }
+      
+      addSoundMessage(message, 'user');
+      inputElement.value = '';
+      
+      showThinkingIndicator();
+      
+      soundUsageCount--;
+      localStorage.setItem('sound_usage_count', soundUsageCount.toString());
+      updateUsageCounter();
+      
+      setTimeout(() => {
+        hideThinkingIndicator();
+        const responses = [
+          "Olá! Sou a IA exclusiva da wallet. Como posso ajudá-lo hoje?",
+          "Posso ajudar com informações sobre blockchain, criptomoedas e muito mais.",
+          "O sistema está funcionando perfeitamente. Todas as funcionalidades estão disponíveis.",
+          "Para segurança máxima, sempre guarde sua frase mnemônica em um local seguro.",
+          "O valor total da wallet é atualizado em tempo real via APIs confiáveis."
+        ];
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        addSoundMessage(randomResponse, 'ai');
+      }, 1500);
+    }
+    
+    function handleSoundChatKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendSoundMessage();
+      }
+    }
+    
+    function addSoundMessage(text, sender) {
+      const chatContainer = document.getElementById('soundChatMessages');
+      const emptyState = chatContainer.querySelector('.sound-empty-state');
+      
+      if (emptyState) {
+        emptyState.remove();
+      }
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `sound-message sound-message-${sender}`;
+      
+      const now = new Date();
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      messageDiv.innerHTML = `
+        <div class="sound-message-sender">
+          ${sender === 'user' ? 'Você' : 'Sound AI'}
+        </div>
+        <div style="color:${sender === 'user' ? '#1A1A1A' : 'var(--text-primary)'};">${text}</div>
+        <div class="sound-message-time">${timeString}</div>
+      `;
+      
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      
+      soundChatHistory.push({
+        text,
+        sender,
+        timestamp: now.toISOString()
+      });
+      
+      if (soundChatHistory.length > 50) {
+        soundChatHistory = soundChatHistory.slice(-50);
+      }
+      
+      localStorage.setItem('sound_chat_history', JSON.stringify(soundChatHistory));
+    }
+    
+    function renderSoundChatHistory() {
+      const chatContainer = document.getElementById('soundChatMessages');
+      const emptyState = chatContainer.querySelector('.sound-empty-state');
+      
+      if (soundChatHistory.length === 0) {
+        if (!emptyState) {
+          chatContainer.innerHTML = `
+            <div class="sound-empty-state">
+              <div class="sound-empty-icon">
+                <i class="fas fa-comments"></i>
+              </div>
+              <h3 style="color:var(--text-secondary);margin-bottom:10px;">
+                Sound Exclusive AI
+              </h3>
+              <p style="color:var(--text-secondary);max-width:400px;margin:0 auto;">
+                Olá! Sou a IA exclusiva da wallet. Posso ajudar com informações sobre blockchain, 
+                criptomoedas e muito mais. Como posso ajudá-lo hoje?
+              </p>
+            </div>
+          `;
+        }
+        return;
+      }
+      
+      if (emptyState) {
+        emptyState.remove();
+      }
+      
+      chatContainer.innerHTML = '';
+      soundChatHistory.forEach(msg => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `sound-message sound-message-${msg.sender}`;
+        
+        const time = new Date(msg.timestamp);
+        const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        messageDiv.innerHTML = `
+          <div class="sound-message-sender">
+            ${msg.sender === 'user' ? 'Você' : 'Sound AI'}
+          </div>
+          <div style="color:${msg.sender === 'user' ? '#1A1A1A' : 'var(--text-primary)'};">${msg.text}</div>
+          <div class="sound-message-time">${timeString}</div>
+        `;
+        
+        chatContainer.appendChild(messageDiv);
+      });
+      
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    function showThinkingIndicator() {
+      const indicator = document.getElementById('thinkingIndicator');
+      if (indicator) {
+        indicator.style.display = 'flex';
+      }
+    }
+    
+    function hideThinkingIndicator() {
+      const indicator = document.getElementById('thinkingIndicator');
+      if (indicator) {
+        indicator.style.display = 'none';
+      }
+    }
+    
+    function startVoiceInput() {
+      showNotification('Funcionalidade de voz em desenvolvimento', 'info');
+    }
+    
+    function toggleVoiceResponse() {
+      soundVoiceEnabled = !soundVoiceEnabled;
+      
+      const icon = document.getElementById('voiceResponseIcon');
+      const text = document.getElementById('voiceResponseText');
+      
+      if (soundVoiceEnabled) {
+        icon.className = 'fas fa-volume-up';
+        text.textContent = 'Voz Ativada';
+        showNotification('Resposta por voz ativada', 'success');
+      } else {
+        icon.className = 'fas fa-volume-mute';
+        text.textContent = 'Voz Desativada';
+        showNotification('Resposta por voz desativada', 'info');
+      }
+    }
+    
+    function clearSoundChat() {
+      if (confirm('Tem certeza que deseja limpar todo o histórico do chat?')) {
+        soundChatHistory = [];
+        localStorage.removeItem('sound_chat_history');
+        renderSoundChatHistory();
+        showNotification('Chat limpo com sucesso', 'success');
+      }
+    }
+    
+    // ============================================
+    // INICIALIZAÇÃO DO SISTEMA
+    // ============================================
+    
     document.addEventListener('DOMContentLoaded', function() {
+      // Tema claro/escuro
       const themeToggle = document.getElementById('themeToggle');
       if (themeToggle) {
         themeToggle.addEventListener('click', function() {
@@ -605,1012 +4071,8 @@
           themeToggle.innerHTML = '<i class="fas fa-moon"></i> Modo Escuro';
         }
       }
-    });
-
-    // ============================================
-    // TAREFA 2.2 - ELEMENTO DE LUXO NA ABA WALLET
-    // ============================================
-    function updateLuxuryElement(chainId) {
-      const chain = blockchains.find(c => c.id === chainId);
-      if (!chain) return;
       
-      if (!blockchainBalances[chainId]) {
-        const baseBalance = Math.random() * 10 + 0.1;
-        blockchainBalances[chainId] = {
-          native: parseFloat(baseBalance.toFixed(4)),
-          timestamp: Date.now()
-        };
-      }
-      
-      const balance = blockchainBalances[chainId];
-      const rate = exchangeRates[chain.symbol] || 1;
-      const brlValue = (balance.native * rate).toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-      });
-      
-      const luxuryElement = document.querySelector('.luxury-balance-info');
-      if (luxuryElement) {
-        luxuryElement.innerHTML = `
-          <div style="display: flex; justify-content: center; gap: 30px; margin-top: 15px;">
-            <div style="text-align: center;">
-              <div style="font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 4px;">
-                VALOR ESTIMADO
-              </div>
-              <div style="font-size: 14px; color: var(--success-color); font-family: 'Cinzel', serif;">
-                ${brlValue}
-              </div>
-            </div>
-            <div style="width: 1px; background: var(--container-border);"></div>
-            <div style="text-align: center;">
-              <div style="font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 4px;">
-                SALDO ${chain.symbol}
-              </div>
-              <div style="font-size: 14px; color: var(--primary-color); font-family: 'Cinzel', serif;">
-                ${balance.native} ${chain.symbol}
-              </div>
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    // ============================================
-    // TAREFA 2.3 - AÇÕES DA WALLET (INTEGRADO)
-    // ============================================
-    function createWalletActions(chainId) {
-      const chain = blockchains.find(c => c.id === chainId);
-      
-      return `
-        <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid var(--container-border);">
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-            <button class="action-btn-minimal" onclick="showSendModal('${chainId}')">
-              <i class="fas fa-paper-plane" style="color: var(--primary-color);"></i>
-              <span style="font-size: 11px; margin-top: 5px;">Enviar</span>
-            </button>
-            <button class="action-btn-minimal" onclick="showReceiveModal('${chainId}')">
-              <i class="fas fa-qrcode" style="color: var(--primary-color);"></i>
-              <span style="font-size: 11px; margin-top: 5px;">Receber</span>
-            </button>
-            <button class="action-btn-minimal" onclick="showTokensModal('${chainId}')">
-              <i class="fas fa-coins" style="color: var(--primary-color);"></i>
-              <span style="font-size: 11px; margin-top: 5px;">Tokens</span>
-            </button>
-          </div>
-          
-          <div style="margin-top: 20px; padding: 15px; background: var(--gradient-card); border-radius: 12px; border: 1px solid var(--card-border);">
-            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-              <i class="fas fa-info-circle"></i> Tokens suportados
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-              <div style="padding: 6px 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; font-size: 11px;">
-                ${chain.symbol} (Nativo)
-              </div>
-              <div style="padding: 6px 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; font-size: 11px;">
-                Tokens ERC-20
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // ============================================
-    // TAREFA 2.4 - SALDO REAL EM TODAS AS WALLETS
-    // ============================================
-    function initializeBalanceSystem() {
-      setInterval(() => {
-        Object.keys(blockchainBalances).forEach(chainId => {
-          const current = blockchainBalances[chainId];
-          if (current) {
-            const variation = (Math.random() - 0.5) * 0.01;
-            blockchainBalances[chainId].native = parseFloat(
-              Math.max(0.0001, current.native + variation).toFixed(4)
-            );
-            blockchainBalances[chainId].timestamp = Date.now();
-            
-            if (currentBlockchain && currentBlockchain.id === chainId) {
-              updateLuxuryElement(chainId);
-            }
-          }
-        });
-      }, 30000);
-    }
-
-    // ============================================
-    // SOUND EXCLUSIVE - FUNÇÕES PRINCIPAIS
-    // ============================================
-    function initializeSoundExclusive() {
-      const savedChat = localStorage.getItem('sound_chat_history');
-      if (savedChat) {
-        soundChatHistory = JSON.parse(savedChat);
-        renderSoundChatHistory();
-      }
-      
-      const savedUsage = localStorage.getItem('sound_usage_count');
-      const lastReset = localStorage.getItem('sound_last_reset');
-      const now = Date.now();
-      
-      if (lastReset) {
-        const hoursSinceReset = (now - parseInt(lastReset)) / (1000 * 60 * 60);
-        if (hoursSinceReset >= USAGE_RESET_HOURS) {
-          soundUsageCount = MAX_USAGE_COUNT;
-          localStorage.setItem('sound_last_reset', now.toString());
-          localStorage.setItem('sound_usage_count', soundUsageCount.toString());
-        } else {
-          soundUsageCount = savedUsage ? parseInt(savedUsage) : MAX_USAGE_COUNT;
-        }
-      } else {
-        localStorage.setItem('sound_last_reset', now.toString());
-        localStorage.setItem('sound_usage_count', MAX_USAGE_COUNT.toString());
-      }
-      
-      updateUsageCounter();
-      
-      setTimeout(() => {
-        updateConnectionStatus('checking', 'Ativando proteção...');
-        
-        setTimeout(() => {
-          updateConnectionStatus('connected', '🔒 Sistema Exclusivo Protegido');
-        }, 1000);
-      }, 500);
-    }
-
-    function updateUsageCounter() {
-      const usageElement = document.getElementById('usageCount');
-      if (usageElement) {
-        usageElement.textContent = soundUsageCount;
-        
-        if (soundUsageCount <= 5) {
-          usageElement.style.color = 'var(--warning-color)';
-          
-          const warningElement = document.querySelector('.usage-warning');
-          if (!warningElement && soundUsageCount <= 3) {
-            const counterDiv = document.querySelector('.sound-usage-counter');
-            if (counterDiv) {
-              const warning = document.createElement('div');
-              warning.className = 'usage-warning';
-              warning.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Chamadas limitadas';
-              counterDiv.appendChild(warning);
-            }
-          }
-        } else {
-          usageElement.style.color = 'var(--primary-color)';
-        }
-      }
-    }
-
-    function updateConnectionStatus(status = 'checking', customMessage = null) {
-      const statusDot = document.getElementById('connectionStatus');
-      const statusText = document.getElementById('statusText');
-      
-      if (!statusDot || !statusText) return;
-      
-      statusDot.className = 'sound-status-dot';
-      
-      switch(status) {
-        case 'connected':
-          statusDot.classList.add('connected');
-          statusText.textContent = customMessage || '🔒 Conectado via API Segura';
-          statusText.style.color = 'var(--success-color)';
-          break;
-          
-        case 'checking':
-          statusDot.classList.add('thinking');
-          statusText.textContent = customMessage || 'Verificando segurança...';
-          statusText.style.color = 'var(--warning-color)';
-          break;
-          
-        case 'warning':
-          statusDot.classList.add('thinking');
-          statusText.textContent = customMessage || 'Sistema protegido ativo';
-          statusText.style.color = 'var(--warning-color)';
-          break;
-          
-        case 'error':
-          statusDot.classList.add('error');
-          statusText.textContent = customMessage || 'Proteção ativada';
-          statusText.style.color = 'var(--error-color)';
-          break;
-          
-        default:
-          statusDot.classList.add('connected');
-          statusText.textContent = '🔒 Sistema Exclusivo Ativo';
-          statusText.style.color = 'var(--success-color)';
-      }
-    }
-
-    function sendSoundMessage() {
-      const inputElement = document.getElementById('soundChatInput');
-      const message = inputElement.value.trim();
-      
-      if (!message) return;
-      
-      if (soundUsageCount <= 0) {
-        showSoundNotification('Limite de chamadas atingido. Tente novamente em 2 horas.', 'error');
-        return;
-      }
-      
-      addSoundMessage(message, 'user');
-      inputElement.value = '';
-      
-      showThinkingIndicator();
-      
-      soundUsageCount--;
-      localStorage.setItem('sound_usage_count', soundUsageCount.toString());
-      updateUsageCounter();
-      
-      sendToCloudflareWorker(message);
-    }
-
-    function handleSoundChatKeyPress(event) {
-      if (event.key === 'Enter') {
-        sendSoundMessage();
-      }
-    }
-
-    function addSoundMessage(text, sender) {
-      const chatContainer = document.getElementById('soundChatMessages');
-      const emptyState = chatContainer.querySelector('.sound-empty-state');
-      
-      if (emptyState) {
-        emptyState.remove();
-      }
-      
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `sound-message sound-message-${sender}`;
-      
-      const now = new Date();
-      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      
-      messageDiv.innerHTML = `
-        <div class="sound-message-sender">
-          ${sender === 'user' ? 'Você' : 'Sound AI'}
-        </div>
-        <div style="color: ${sender === 'user' ? '#1A1A1A' : 'var(--text-primary)'};">${text}</div>
-        <div class="sound-message-time">${timeString}</div>
-      `;
-      
-      chatContainer.appendChild(messageDiv);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-      
-      soundChatHistory.push({
-        text,
-        sender,
-        timestamp: now.toISOString()
-      });
-      
-      if (soundChatHistory.length > 50) {
-        soundChatHistory = soundChatHistory.slice(-50);
-      }
-      
-      localStorage.setItem('sound_chat_history', JSON.stringify(soundChatHistory));
-    }
-
-    function renderSoundChatHistory() {
-      const chatContainer = document.getElementById('soundChatMessages');
-      const emptyState = chatContainer.querySelector('.sound-empty-state');
-      
-      if (soundChatHistory.length === 0) {
-        if (!emptyState) {
-          chatContainer.innerHTML = `
-            <div class="sound-empty-state">
-              <div class="sound-empty-icon">
-                <i class="fas fa-comments"></i>
-              </div>
-              <h3 style="color: var(--text-secondary); margin-bottom: 10px;">
-                Sound Exclusive AI
-              </h3>
-              <p style="color: var(--text-secondary); max-width: 400px;">
-                Olá! Sou a IA exclusiva da wallet. Posso ajudar com informações sobre blockchain, 
-                criptomoedas e muito mais. Como posso ajudá-lo hoje?
-              </p>
-            </div>
-          `;
-        }
-        return;
-      }
-      
-      if (emptyState) {
-        emptyState.remove();
-      }
-      
-      chatContainer.innerHTML = '';
-      soundChatHistory.forEach(msg => {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `sound-message sound-message-${msg.sender}`;
-        
-        const time = new Date(msg.timestamp);
-        const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        messageDiv.innerHTML = `
-          <div class="sound-message-sender">
-            ${msg.sender === 'user' ? 'Você' : 'Sound AI'}
-          </div>
-          <div style="color: ${msg.sender === 'user' ? '#1A1A1A' : 'var(--text-primary)'};">${msg.text}</div>
-          <div class="sound-message-time">${timeString}</div>
-        `;
-        
-        chatContainer.appendChild(messageDiv);
-      });
-      
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function showThinkingIndicator() {
-      const indicator = document.getElementById('thinkingIndicator');
-      if (indicator) {
-        indicator.style.display = 'flex';
-      }
-    }
-
-    function hideThinkingIndicator() {
-      const indicator = document.getElementById('thinkingIndicator');
-      if (indicator) {
-        indicator.style.display = 'none';
-      }
-    }
-
-    async function sendToCloudflareWorker(message) {
-      try {
-        const response = await protectedApiClient.askQuestion(message);
-        
-        hideThinkingIndicator();
-        
-        const aiResponse = response.answer || response.response || 
-          'Olá! Esta é a resposta segura da IA Sound Exclusive. Como posso ajudá-lo hoje?';
-        
-        addSoundMessage(aiResponse, 'ai');
-        
-        updateConnectionStatus('connected', '🔒 Conectado via API Segura');
-        
-        if (soundVoiceEnabled) {
-          speakText(aiResponse);
-        }
-        
-      } catch (error) {
-        hideThinkingIndicator();
-        console.error('Erro na API protegida:', error);
-        
-        let fallbackResponse;
-        
-        if (error.message.includes('403') || error.message.includes('Acesso restrito')) {
-          fallbackResponse = "🔒 Sistema de segurança ativado. Sua conexão está protegida.";
-          updateConnectionStatus('error', 'Proteção ativa');
-        } else if (error.message.includes('429')) {
-          fallbackResponse = "⏳ Processando com segurança. Aguarde um momento...";
-          updateConnectionStatus('warning', 'Otimizando');
-        } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
-          fallbackResponse = "🌐 Conexão segura em ajuste. Tente novamente...";
-          updateConnectionStatus('warning', 'Conexão segura');
-        } else {
-          fallbackResponse = "🤖 Sistema exclusivo ativo. Estou aqui para ajudar!";
-          updateConnectionStatus('connected', 'Modo seguro local');
-        }
-        
-        addSoundMessage(fallbackResponse, 'ai');
-      }
-    }
-
-    function speakText(text) {
-      if (!('speechSynthesis' in window)) {
-        console.log('API de síntese de voz não suportada');
-        return;
-      }
-      
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'pt-BR';
-      utterance.rate = 1.0;
-      utterance.pitch = 1.0;
-      
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function startVoiceInput() {
-      showSoundNotification('Funcionalidade de voz em desenvolvimento', 'info');
-    }
-
-    function toggleVoiceResponse() {
-      soundVoiceEnabled = !soundVoiceEnabled;
-      
-      const icon = document.getElementById('voiceResponseIcon');
-      const text = document.getElementById('voiceResponseText');
-      
-      if (soundVoiceEnabled) {
-        icon.className = 'fas fa-volume-up';
-        text.textContent = 'Voz Ativada';
-        showSoundNotification('Resposta por voz ativada', 'success');
-      } else {
-        icon.className = 'fas fa-volume-mute';
-        text.textContent = 'Voz Desativada';
-        showSoundNotification('Resposta por voz desativada', 'info');
-      }
-    }
-
-    function clearSoundChat() {
-      if (confirm('Tem certeza que deseja limpar todo o histórico do chat?')) {
-        soundChatHistory = [];
-        localStorage.removeItem('sound_chat_history');
-        renderSoundChatHistory();
-        showSoundNotification('Chat limpo com sucesso', 'success');
-      }
-    }
-
-    function showSoundNotification(message, type = 'info') {
-      const notification = document.getElementById('notification');
-      const messageElement = document.getElementById('notificationMessage');
-      
-      messageElement.textContent = message;
-      notification.classList.add('show');
-      
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 3000);
-    }
-
-    // ============================================
-    // FUNÇÕES EXISTENTES DA WALLET (MANTIDAS)
-    // ============================================
-    function showNotification(message, type = 'info') {
-      const notification = document.getElementById('notification');
-      const messageElement = document.getElementById('notificationMessage');
-      messageElement.textContent = message;
-      notification.classList.add('show');
-      setTimeout(() => notification.classList.remove('show'), 4000);
-    }
-
-    // ============================================
-    // FUNÇÃO PRINCIPAL DE CARREGAMENTO DA WALLET
-    // ============================================
-    function loadWalletForChain(chainId) {
-      const walletData = blockchainStorage.get(chainId);
-      if (walletData) {
-        updateWalletInterface(chainId, JSON.parse(walletData));
-      } else {
-        showCreateWalletInterface(chainId);
-      }
-    }
-
-    // ============================================
-    // ATUALIZAÇÃO DA INTERFACE DA WALLET (COM NOVOS ELEMENTOS)
-    // ============================================
-    function updateWalletInterface(chainId, walletData) {
-      const chain = blockchains.find(c => c.id === chainId);
-      const walletTab = document.getElementById('walletTab');
-      
-      if (!blockchainBalances[chainId]) {
-        const baseBalance = Math.random() * 10 + 0.1;
-        blockchainBalances[chainId] = {
-          native: parseFloat(baseBalance.toFixed(4)),
-          timestamp: Date.now()
-        };
-      }
-      
-      const balance = blockchainBalances[chainId];
-      const rate = exchangeRates[chain.symbol] || 1;
-      const brlValue = (balance.native * rate).toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-      });
-      
-      walletTab.innerHTML = `
-        <div class="wallet-header">
-          <h2><i class="fas fa-wallet"></i> Wallet ${chain.name}</h2>
-          <p>Gerencie sua wallet premium na ${chain.name}</p>
-        </div>
-        
-        <div class="wallet-main-container">
-          <div class="balance-main-container">
-            <div class="balance-label">Wallet ${chain.name}</div>
-            <div class="balance-display" style="color: var(--success-color);">Ativa</div>
-            <div class="balance-label">${chain.symbol}</div>
-            
-            <!-- Elemento de luxo integrado -->
-            <div class="luxury-balance-info" style="margin-top: 20px;">
-              <div style="display: flex; justify-content: center; gap: 30px; margin-top: 15px;">
-                <div style="text-align: center;">
-                  <div style="font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 4px;">
-                    VALOR ESTIMADO
-                  </div>
-                  <div style="font-size: 14px; color: var(--success-color); font-family: 'Cinzel', serif;">
-                    ${brlValue}
-                  </div>
-                </div>
-                <div style="width: 1px; background: var(--container-border);"></div>
-                <div style="text-align: center;">
-                  <div style="font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 4px;">
-                    SALDO ${chain.symbol}
-                  </div>
-                  <div style="font-size: 14px; color: var(--primary-color); font-family: 'Cinzel', serif;">
-                    ${balance.native} ${chain.symbol}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div style="font-size: 14px; color: var(--text-secondary); margin-top: 15px;">
-              ${walletData.address.substring(0, 10)}...${walletData.address.substring(walletData.address.length - 8)}
-            </div>
-          </div>
-          
-          ${createWalletActions(chainId)}
-          
-          <div class="wallet-operations-grid">
-            <div class="action-btn" onclick="exportWallet('${chainId}')">
-              <i class="fas fa-download"></i>
-              <span>Exportar Wallet</span>
-            </div>
-            <div class="action-btn" onclick="showPrivateKey('${chainId}')">
-              <i class="fas fa-key"></i>
-              <span>Chave Privada</span>
-            </div>
-            <div class="action-btn" onclick="showMnemonic('${chainId}')">
-              <i class="fas fa-seedling"></i>
-              <span>Mnemônica</span>
-            </div>
-            <div class="action-btn" onclick="deleteWallet('${chainId}')">
-              <i class="fas fa-trash"></i>
-              <span>Excluir Wallet</span>
-            </div>
-            <div class="action-btn" onclick="backupWallet('${chainId}')">
-              <i class="fas fa-shield-alt"></i>
-              <span>Backup</span>
-            </div>
-            <div class="action-btn" onclick="restoreWallet('${chainId}')">
-              <i class="fas fa-redo"></i>
-              <span>Restaurar</span>
-            </div>
-            <div class="action-btn" onclick="generateExclusiveIdentityPDF('${chainId}')">
-              <i class="fas fa-file-pdf"></i>
-              <span>Gerar PDF</span>
-            </div>
-            <div class="action-btn" onclick="switchTab('blockchainsTab')">
-              <i class="fas fa-arrow-left"></i>
-              <span>Voltar</span>
-            </div>
-          </div>
-          
-          <div class="blockchain-divider"></div>
-          
-          <div class="info-card">
-            <h3><i class="fas fa-info-circle"></i> Informações da Wallet</h3>
-            <div class="address-display">
-              ${walletData.address}
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-              <button class="btn-secondary btn-small" onclick="copyToClipboard('${walletData.address}')">
-                <i class="fas fa-copy"></i> Copiar Endereço
-              </button>
-              <button class="btn-secondary btn-small" onclick="showQRCode('${walletData.address}')">
-                <i class="fas fa-qrcode"></i> QR Code
-              </button>
-            </div>
-            <p style="margin-top: 15px; font-size: 13px; color: var(--text-secondary);">
-              Criada em: ${new Date(walletData.createdAt).toLocaleDateString()}
-            </p>
-          </div>
-        </div>
-      `;
-    }
-
-    // ============================================
-    // FUNÇÃO DE CRIAÇÃO DE WALLET (COM PDF INTEGRADO)
-    // ============================================
-    function createWallet(chainId) {
-      try {
-        const wallet = ethers.Wallet.createRandom();
-        const walletData = {
-          address: wallet.address,
-          privateKey: wallet.privateKey,
-          mnemonic: wallet.mnemonic?.phrase,
-          chainId: chainId,
-          createdAt: new Date().toISOString()
-        };
-        
-        blockchainStorage.set(chainId, walletData);
-        
-        // Gerar PDF institucional automaticamente
-        setTimeout(() => {
-          generateInstitutionalPDF(chainId, wallet.address);
-        }, 1000);
-        
-        loadWalletForChain(chainId);
-        
-        const button = document.querySelector(`.blockchain-button[data-chain="${chainId}"]`);
-        const chain = blockchains.find(c => c.id === chainId);
-        button.innerHTML = `${chain.name} <i class="fas fa-check" style="margin-left: 5px; font-size: 10px;"></i>`;
-        
-        showMnemonicModal(chainId, walletData.mnemonic);
-        showNotification(`✅ Wallet ${chain.name} criada com sucesso!`, 'success');
-        
-      } catch (error) {
-        showNotification(`❌ Erro ao criar wallet: ${error.message}`, 'error');
-      }
-    }
-
-    // ============================================
-    // FUNÇÃO DE INTERFACE DE CRIAÇÃO
-    // ============================================
-    function showCreateWalletInterface(chainId) {
-      const chain = blockchains.find(c => c.id === chainId);
-      const walletTab = document.getElementById('walletTab');
-      
-      walletTab.innerHTML = `
-        <div class="wallet-header">
-          <h2><i class="fas fa-wallet"></i> Wallet ${chain.name}</h2>
-          <p>Crie sua wallet premium na ${chain.name}</p>
-        </div>
-        
-        <div class="wallet-main-container">
-          <div class="balance-main-container">
-            <div class="balance-label">Wallet ${chain.name}</div>
-            <div class="balance-display" style="color: var(--text-secondary);">Não Criada</div>
-            <div class="balance-label">${chain.symbol}</div>
-            <div style="font-size: 14px; color: var(--text-secondary); margin-top: 15px;">
-              Clique em "Criar Wallet" para começar
-            </div>
-          </div>
-          
-          <div class="wallet-operations-grid">
-            <div class="action-btn" onclick="createWallet('${chainId}')">
-              <i class="fas fa-gem"></i>
-              <span>Criar Wallet</span>
-            </div>
-            <div class="action-btn" onclick="showRestoreModal('${chainId}')">
-              <i class="fas fa-redo"></i>
-              <span>Restaurar Wallet</span>
-            </div>
-            <div class="action-btn" onclick="selectBlockchain('${chainId}')">
-              <i class="fas fa-arrow-left"></i>
-              <span>Voltar</span>
-            </div>
-          </div>
-          
-          <div class="blockchain-divider"></div>
-          
-          <div class="info-card">
-            <h3><i class="fas fa-info-circle"></i> Informações da ${chain.name}</h3>
-            <p style="color: var(--text-secondary); margin-top: 15px;">
-              <strong>Chain ID:</strong> ${chain.chainId}<br>
-              <strong>Símbolo:</strong> ${chain.symbol}<br>
-              <strong>Status:</strong> Blockchain ativa
-            </p>
-            <p style="margin-top: 15px; font-size: 13px; color: var(--warning-color);">
-              ⚠️ Crie sua wallet para começar a usar esta blockchain
-            </p>
-          </div>
-        </div>
-      `;
-    }
-
-    // ============================================
-    // FUNÇÕES AUXILIARES
-    // ============================================
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text)
-        .then(() => showNotification('✅ Copiado para a área de transferência', 'success'))
-        .catch(err => showNotification('❌ Erro ao copiar: ' + err, 'error'));
-    }
-
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) modal.remove();
-    }
-
-    function exportWallet(chainId) {
-      const walletData = blockchainStorage.get(chainId);
-      if (walletData) {
-        const data = JSON.parse(walletData);
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `wallet_${chainId}_backup.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        showNotification('✅ Wallet exportada com sucesso', 'success');
-      }
-    }
-
-    function deleteWallet(chainId) {
-      if (confirm('⚠️ Tem certeza que deseja excluir esta wallet? Esta ação não pode ser desfeita!')) {
-        blockchainStorage.remove(chainId);
-        const button = document.querySelector(`.blockchain-button[data-chain="${chainId}"]`);
-        const chain = blockchains.find(c => c.id === chainId);
-        button.innerHTML = chain.name;
-        showCreateWalletInterface(chainId);
-        showNotification('🗑️ Wallet excluída com sucesso', 'info');
-      }
-    }
-
-    function showPrivateKey(chainId) {
-      const walletData = blockchainStorage.get(chainId);
-      if (walletData) {
-        const data = JSON.parse(walletData);
-        alert(`Chave Privada: ${data.privateKey}\n\n⚠️ NUNCA COMPARTILHE SUA CHAVE PRIVADA!`);
-      }
-    }
-
-    function showMnemonic(chainId) {
-      const walletData = blockchainStorage.get(chainId);
-      if (walletData) {
-        const data = JSON.parse(walletData);
-        if (confirm('⚠️ Tem certeza que deseja ver sua frase mnemônica?')) {
-          alert(`Frase Mnemônica: ${data.mnemonic}\n\n⚠️ GUARDE EM UM LOCAL SEGURO!`);
-        }
-      }
-    }
-
-    function backupWallet(chainId) {
-      exportWallet(chainId);
-    }
-
-    function restoreWallet(chainId) {
-      showRestoreModal(chainId);
-    }
-
-    function showRestoreModal(chainId) {
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay active';
-      modal.id = 'restoreWalletModal';
-      modal.innerHTML = `
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="modal-title">🔑 Restaurar Wallet</div>
-            <button class="modal-close" onclick="closeModal('restoreWalletModal')">&times;</button>
-          </div>
-          <div class="modal-body">
-            <div class="input-group">
-              <label>Frase Mnemônica (12 ou 24 palavras)</label>
-              <textarea id="restoreMnemonic" rows="3" placeholder="insira sua frase mnemônica aqui..."></textarea>
-            </div>
-            <p style="color: var(--text-secondary); font-size: 12px;">
-              Insira sua frase mnemônica para restaurar sua wallet existente.
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button class="btn-secondary btn-small" onclick="closeModal('restoreWalletModal')">
-              Cancelar
-            </button>
-            <button class="btn-success btn-small" onclick="restoreFromMnemonic('${chainId}')">
-              <i class="fas fa-redo"></i> Restaurar Wallet
-            </button>
-          </div>
-        </div>
-      `;
-      
-      document.body.appendChild(modal);
-    }
-
-    function restoreFromMnemonic(chainId) {
-      const mnemonicInput = document.getElementById('restoreMnemonic');
-      if (!mnemonicInput) return;
-      
-      const mnemonic = mnemonicInput.value.trim();
-      if (!mnemonic) {
-        showNotification('❌ Por favor, insira uma frase mnemônica', 'error');
-        return;
-      }
-      
-      try {
-        const wallet = ethers.Wallet.fromPhrase(mnemonic);
-        const walletData = {
-          address: wallet.address,
-          privateKey: wallet.privateKey,
-          mnemonic: mnemonic,
-          chainId: chainId,
-          createdAt: new Date().toISOString(),
-          restoredAt: new Date().toISOString()
-        };
-        
-        blockchainStorage.set(chainId, walletData);
-        closeModal('restoreWalletModal');
-        loadWalletForChain(chainId);
-        
-        const button = document.querySelector(`.blockchain-button[data-chain="${chainId}"]`);
-        const chain = blockchains.find(c => c.id === chainId);
-        button.innerHTML = `${chain.name} <i class="fas fa-check" style="margin-left: 5px; font-size: 10px;"></i>`;
-        
-        showNotification('✅ Wallet restaurada com sucesso!', 'success');
-      } catch (error) {
-        showNotification('❌ Frase mnemônica inválida', 'error');
-      }
-    }
-
-    function showMnemonicModal(chainId, mnemonic) {
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay active';
-      modal.id = 'mnemonicModal';
-      modal.innerHTML = `
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="modal-title">⚠️ Guarde Sua Frase Mnemônica</div>
-            <button class="modal-close" onclick="closeModal('mnemonicModal')">&times;</button>
-          </div>
-          <div class="modal-body">
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">
-              Esta frase é a única forma de recuperar sua wallet. Guarde em um local seguro!
-            </p>
-            <div class="mnemonic-words">
-              ${mnemonic.split(' ').map((word, index) => 
-                `<div class="mnemonic-word" data-index="${index + 1}">${word}</div>`
-              ).join('')}
-            </div>
-            <div class="mnemonic-timer-container">
-              <div class="mnemonic-warning">
-                ⚠️ Esta frase só será mostrada uma vez
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn-secondary btn-small" onclick="copyToClipboard('${mnemonic}')">
-              <i class="fas fa-copy"></i> Copiar Frase
-            </button>
-            <button class="btn-success btn-small" onclick="closeModal('mnemonicModal')">
-              <i class="fas fa-check"></i> Eu Guardei
-            </button>
-          </div>
-        </div>
-      `;
-      
-      document.body.appendChild(modal);
-    }
-
-    function showQRCode(address) {
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay active';
-      modal.innerHTML = `
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="modal-title">📱 QR Code do Endereço</div>
-            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
-          </div>
-          <div class="modal-body" style="text-align: center;">
-            <div id="qrcodeContainer" style="width: 200px; height: 200px; margin: 0 auto;"></div>
-            <p style="margin-top: 20px; color: var(--text-secondary); font-family: monospace; word-break: break-all;">
-              ${address}
-            </p>
-          </div>
-        </div>
-      `;
-      
-      document.body.appendChild(modal);
-      
-      if (window.QRCode) {
-        new QRCode(document.getElementById('qrcodeContainer'), {
-          text: address,
-          width: 200,
-          height: 200,
-          colorDark: "#000000",
-          colorLight: "#ffffff"
-        });
-      }
-    }
-
-    // ============================================
-    // FUNÇÕES AUXILIARES PARA MODAIS
-    // ============================================
-    function showSendModal(chainId) {
-      showNotification('Funcionalidade de envio em desenvolvimento', 'info');
-    }
-
-    function showReceiveModal(chainId) {
-      const walletData = blockchainStorage.get(chainId);
-      if (walletData) {
-        const data = JSON.parse(walletData);
-        showQRCode(data.address);
-      }
-    }
-
-    function showTokensModal(chainId) {
-      showNotification('Gerenciamento de tokens em desenvolvimento', 'info');
-    }
-
-    function showAVZConfig() {
-      showNotification('Configurações AVZ em desenvolvimento', 'info');
-    }
-
-    // ============================================
-    // FUNÇÃO PARA GERAR PDF DA IDENTIDADE EXCLUSIVA
-    // ============================================
-    function generateExclusiveIdentityPDF(chainId) {
-      const walletData = blockchainStorage.get(chainId);
-      if (!walletData) {
-        showNotification('Nenhuma wallet encontrada para gerar o PDF', 'error');
-        return;
-      }
-
-      const data = JSON.parse(walletData);
-      const chain = blockchains.find(c => c.id === chainId);
-
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF('p', 'mm', 'a4');
-
-      const primaryColor = [212, 175, 55];
-      const secondaryColor = [26, 26, 26];
-
-      doc.setFillColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-      doc.rect(0, 0, 210, 297, 'F');
-
-      doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.setLineWidth(1);
-      doc.rect(5, 5, 200, 287);
-
-      doc.setFontSize(28);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.setFont('helvetica', 'bold');
-      doc.text('EXCLUSIVE LAYER IDENTITY', 105, 30, null, null, 'center');
-
-      doc.setFontSize(14);
-      doc.setTextColor(150, 150, 150);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Sistema Blockchain Isolado Premium', 105, 40, null, null, 'center');
-
-      doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.setLineWidth(0.5);
-      doc.line(50, 45, 160, 45);
-
-      doc.setFontSize(16);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Informações da Wallet', 20, 60);
-
-      doc.setFontSize(10);
-      doc.setTextColor(200, 200, 200);
-      doc.text(`Blockchain: ${chain.name}`, 20, 70);
-      doc.text(`Endereço: ${data.address}`, 20, 76);
-      doc.text(`Criada em: ${new Date(data.createdAt).toLocaleDateString()}`, 20, 82);
-
-      doc.setFontSize(16);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Funções da Plataforma', 20, 100);
-
-      const functions = [
-        "Criação de wallet isolada para 20 blockchains",
-        "Restauração de wallet via mnemônica",
-        "Exportação de wallet (backup)",
-        "Exclusão de wallet",
-        "Visualização de chave privada",
-        "Visualização de frase mnemônica",
-        "Geração de QR Code do endereço",
-        "Sound Exclusive AI: Chat por texto e voz",
-        "Sistema de contador de uso da IA",
-        "Interface luxuosa com temas claro/escuro",
-        "Armazenamento local isolado por blockchain",
-        "Proteção por frase mnemônica de 12/24 palavras"
-      ];
-
-      let yPosition = 110;
-      doc.setFontSize(10);
-      doc.setTextColor(200, 200, 200);
-
-      functions.forEach(func => {
-        doc.text(`• ${func}`, 25, yPosition);
-        yPosition += 6;
-      });
-
-      doc.setFontSize(12);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Nota de Segurança:', 20, 200);
-      doc.setFontSize(10);
-      doc.setTextColor(200, 200, 200);
-      doc.text('Esta identidade é gerada localmente e não é armazenada em servidores.', 20, 206);
-      doc.text('Mantenha suas informações de wallet em segurança.', 20, 212);
-
-      doc.setFontSize(8);
-      doc.setTextColor(100, 100, 100);
-      doc.text('Gerado em ' + new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(), 105, 280, null, null, 'center');
-      doc.text('EXCLUSIVE LAYER IDENTITY - Sistema Blockchain Isolado', 105, 285, null, null, 'center');
-
-      doc.save(`exclusive_identity_${chainId}_${new Date().getTime()}.pdf`);
-    }
-
-    // ============================================
-    // INICIALIZAÇÃO DO SISTEMA
-    // ============================================
-    document.addEventListener('DOMContentLoaded', function() {
-      // Adicionar evento aos botões de tab
+      // Tabs
       document.querySelectorAll('.tab-button').forEach(button => {
         button.addEventListener('click', function() {
           const tabId = this.dataset.tab;
@@ -1618,7 +4080,7 @@
         });
       });
       
-      // Criar botões para as 20 blockchains
+      // Botões das blockchains
       const container = document.getElementById('blockchainButtonsContainer');
       blockchains.forEach(chain => {
         const button = document.createElement('button');
@@ -1626,7 +4088,7 @@
         button.dataset.chain = chain.id;
         
         if (blockchainStorage.exists(chain.id)) {
-          button.innerHTML = `${chain.name} <i class="fas fa-check" style="margin-left: 5px; font-size: 10px;"></i>`;
+          button.innerHTML = `${chain.name} <i class="fas fa-check" style="margin-left:5px;font-size:10px;"></i>`;
         } else {
           button.textContent = chain.name;
         }
@@ -1635,95 +4097,15 @@
         container.appendChild(button);
       });
       
-      // Inicializar sistema de saldos
-      setTimeout(() => {
-        initializeBalanceSystem();
-      }, 2000);
-      
       // Sistema pronto
       setTimeout(() => {
-        showNotification('20 Blockchains Reais Carregadas!', 'success');
+        showNotification('✅ Wallet Web3 Premium Pronta!', 'success');
       }, 1000);
-      
-      // CSS para botões minimalistas
-      const style = document.createElement('style');
-      style.textContent = `
-        .action-btn-minimal {
-          background: var(--card-bg);
-          border: 1px solid var(--card-border);
-          border-radius: 10px;
-          padding: 15px 10px;
-          cursor: pointer;
-          transition: var(--transition);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          color: var(--text-primary);
-          font-size: 13px;
-        }
-        .action-btn-minimal:hover {
-          border-color: var(--primary-color);
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-gold);
-        }
-      `;
-      document.head.appendChild(style);
     });
-
-    // ============================================
-    // VARREDURA FINAL DE VALIDAÇÃO
-    // ============================================
-    function performFinalAudit() {
-      console.log('🔍 INICIANDO VARREDURA FINAL DO SISTEMA');
-      
-      const containers = document.querySelectorAll('.wallet-container, .info-card, .balance-main-container');
-      containers.forEach(container => {
-        const rect = container.getBoundingClientRect();
-        if (rect.width <= 0 || rect.height <= 0) {
-          console.error('❌ Container com dimensões inválidas:', container.className);
-        }
-      });
-      
-      const body = document.body;
-      if (!body.classList.contains('theme-luxury') && !body.classList.contains('theme-light')) {
-        console.error('❌ Tema não definido');
-      }
-      
-      const tabs = ['blockchainsTab', 'walletTab', 'soundExclusiveTab', 'infraAvzTab'];
-      tabs.forEach(tabId => {
-        const tab = document.getElementById(tabId);
-        if (!tab && tabId !== 'infraAvzTab') {
-          console.error(`❌ Tab ${tabId} não encontrada`);
-        }
-      });
-      
-      const requiredFunctions = [
-        'createWallet', 'selectBlockchain', 'switchTab', 
-        'exportWallet', 'showQRCode', 'sendSoundMessage'
-      ];
-      
-      requiredFunctions.forEach(funcName => {
-        if (typeof window[funcName] !== 'function') {
-          console.error(`❌ Função ${funcName} não definida`);
-        }
-      });
-      
-      blockchains.forEach(chain => {
-        const exists = blockchainStorage.exists(chain.id);
-        console.log(`📦 ${chain.name}: ${exists ? 'Wallet presente' : 'Sem wallet'}`);
-      });
-      
-      console.log('✅ VARREDURA FINAL CONCLUÍDA');
-      console.log('============================================');
-      console.log('Interface preservada. Funcionalidade integrada. Sistema auditado. Missão concluída.');
-      console.log('============================================');
+    
+    function restoreWallet(chainId) {
+      showRestoreModal(chainId);
     }
-
-    // Executar varredura final após carregamento completo
-    window.addEventListener('load', function() {
-      setTimeout(performFinalAudit, 3000);
-    });
   </script>
 </body>
 </html>
